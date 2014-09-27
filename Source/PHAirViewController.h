@@ -54,8 +54,8 @@
 @property (nonatomic, strong) UIFont *sectionTitleFont;
 @property (nonatomic, strong) UIFont *rowTitleFont;
 
-@property (nonatomic, assign) id <PHAirMenuDelegate>   delegate;
-@property (nonatomic, assign) id <PHAirMenuDataSource> dataSource;
+@property (nonatomic, weak) id <PHAirMenuDelegate>   delegate;
+@property (nonatomic, weak) id <PHAirMenuDataSource> dataSource;
 
 @property (nonatomic, readonly) UIViewController * fontViewController;
 @property (nonatomic, strong)   NSIndexPath      * currentIndexPath;
