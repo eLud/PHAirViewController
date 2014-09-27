@@ -34,6 +34,7 @@
 #import <objc/runtime.h>
 #import "UIViewAdditions.h"
 #import "PPImageTitleButton.h"
+#import "PHAirViewLayout.h"
 
 #define kMenuItemHeight 80
 #define kSessionWidth   220
@@ -68,6 +69,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 // pan for scroll
 @property (nonatomic, strong) UIPanGestureRecognizer * panGestureRecognizer;
 
+@property (nonatomic, strong) PHAirViewLayout *layout;
 @end
 
 @implementation PHAirViewController {
@@ -105,20 +107,24 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
      ]
      */
     NSArray * viewControllers;
-    
-    float heightAirMenuRow;
 }
 
 @synthesize contentView = _contentView, airImageView = _airImageView;
 
-- (id)initWithRootViewController:(UIViewController*)viewController
-                     atIndexPath:(NSIndexPath*)indexPath
+- (instancetype)initWithRootViewController:(UIViewController *)viewController atIndexPath:(NSIndexPath *)indexPath
+{
+    return [self initWithRootViewController:viewController atIndexPath:indexPath layout:[PHAirViewLayout defaultLayout]];
+}
+
+- (instancetype)initWithRootViewController:(UIViewController*)viewController
+                     atIndexPath:(NSIndexPath*)indexPath layout:(PHAirViewLayout *)layout
 {
     if (self = [super init]) {
         CGRect rect = [UIScreen mainScreen].applicationFrame;
         self.view.frame = CGRectMake(0, 0, rect.size.width, rect.size.height);
         [self bringViewControllerToTop:viewController
                            atIndexPath:indexPath];
+        _layout = layout;
     }
     return self;
 }
@@ -195,9 +201,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     
     self.leftView.alpha = 0;
     self.rightView.alpha = 0;
-    
-     // Default height row value
-    heightAirMenuRow = 44;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -576,11 +579,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     // Get number session
     session = [self.dataSource numberOfSession];
     
-    // Get height
-    if ([self.delegate respondsToSelector:@selector(heightForAirMenuRow)]) {
-        heightAirMenuRow = [self.delegate heightForAirMenuRow];
-    }
-    
     // Init
     NSMutableArray * tempThumbnails = [NSMutableArray array];
     NSMutableArray * tempViewControllers = [NSMutableArray array];
@@ -618,9 +616,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         if ([self.dataSource respondsToSelector:@selector(thumbnailForHeaderAtSession:)]) {
             [sessionView.titleButton setImageForSingleState:[self.dataSource thumbnailForHeaderAtSession:i]];
             sessionView.titleButton.imageView.contentMode = UIViewContentModeCenter;
-            if ([self.delegate respondsToSelector:@selector(thumbnailAndTitlePaddingForHeaderAtSession:)]) {
-                sessionView.titleButton.titleImagePadding = [self.delegate thumbnailAndTitlePaddingForHeaderAtSession:i];
-            }
+            sessionView.titleButton.titleImagePadding = _layout.paddingBetweenAirMenuRow;
         }
     }
     
@@ -632,7 +628,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             [view removeFromSuperview];
         }
 
-        int firstTop = (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * heightAirMenuRow)/2;
+        int firstTop = (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * _layout.heightForAirMenuRow)/2;
         if (firstTop < 0) firstTop = 0;
         for (int j = 0; j < [rowsOfSession[i] intValue]; j ++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
@@ -648,12 +644,10 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             
             if ([self.dataSource respondsToSelector:@selector(thumbnailForRowAtIndexPath:)]) {
                 [button setImage:[self.dataSource thumbnailForRowAtIndexPath:indexPath] forState:UIControlStateNormal];
-                if ([self.delegate respondsToSelector:@selector(thumbnailAndTitlePaddingForRowAtIndexPath:)]) {
-                    button.titleImagePadding = [self.delegate thumbnailAndTitlePaddingForRowAtIndexPath:indexPath];
-                }
+                button.titleImagePadding = _layout.paddingBetweenTitleAndThumbnailInRow;
             }
             [button sizeToFit];
-            button.frame = CGRectMake(0, firstTop + heightAirMenuRow*j, MIN(CGRectGetWidth(button.bounds), 200), heightAirMenuRow);
+            button.frame = CGRectMake(0, firstTop + _layout.heightForAirMenuRow*j, MIN(CGRectGetWidth(button.bounds), 200), _layout.heightForAirMenuRow);
             button.tag = j;
             sessionView.containView.tag = i;
             [sessionView.containView addSubview:button];

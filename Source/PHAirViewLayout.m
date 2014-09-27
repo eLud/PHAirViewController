@@ -10,4 +10,10 @@
 
 @implementation PHAirViewLayout
 
++ (instancetype)defaultLayout
+{
+    PHAirViewLayout *l = [PHAirViewLayout new];
+    l.heightForAirMenuRow = 44;
+    return l;
+}
 @end
