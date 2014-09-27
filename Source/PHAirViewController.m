@@ -77,10 +77,10 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     NSArray  * rowsOfSession;
     
     // sesion view
-    // sesion view
+    NSMutableDictionary    * sessionViews;    
     
     // current index sesion view
-    // current index sesion view
+    int        currentIndexSession;    
     
     // for animation
     BOOL            isAnimation;
@@ -91,10 +91,10 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     NSMutableDictionary * lastIndexInSession;
     
     /* @[ // session 0
-    /* @[ // session 0
         @{@(0) : thumbnail image 0,@(1) : thumbnail image 1},
           // session 1
         @{@(0) : thumbnail image 0,@(1) : thumbnail image 1},
+        ]
      */
     NSArray * thumbnailImages;
     
@@ -167,23 +167,23 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     
     // Init tap on contentView
     /*
-    /*
     UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                                            action:@selector(handleRevealGestureOnAirImageView:)];
     self.airImageView.backgroundColor = [UIColor greenColor];
+    [self.airImageView addGestureRecognizer:pan];
      */
     UISwipeGestureRecognizer * swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeOnAirImageView:)];
     swipe.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.airImageView addGestureRecognizer:swipe];
     UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self
-    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(handleTapOnAirImageView:)];
     [self.airImageView addGestureRecognizer:tap];
     
     // Init panGestureRecognizer for scroll on sessionViews
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleRevealGesture:)];
     self.panGestureRecognizer.delegate = self;
     [self.leftView addGestureRecognizer:self.panGestureRecognizer];
-    [self.leftView addGestureRecognizer:self.panGestureRecognizer];
+
     
     // Setup animation
     [self setupAnimation];
@@ -191,7 +191,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     self.leftView.alpha = 0;
     self.rightView.alpha = 0;
     
-    
+     // Default height row value
     heightAirMenuRow = 44;
 }
 
@@ -225,8 +225,8 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     }
     
     // move to top
-    // move to top
 //    [_fontViewController viewWillAppear:YES];
+//    [_fontViewController viewDidAppear:YES];
     
     [self addChildViewController:_fontViewController];
     UIView * controllerView = _fontViewController.view;
@@ -241,7 +241,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (void)prepareForSegue:(PHAirViewControllerSegue *)segue sender:(id)sender
 {
     if ( [segue isKindOfClass:[PHAirViewControllerSegue class]] && sender == nil )
-    if ( [segue isKindOfClass:[PHAirViewControllerSegue class]] && sender == nil )
+    {
         NSIndexPath * nextIndexPath = self.currentIndexPath;
         if ([segue.identifier isEqualToString:PHSegueRootIdentifier]) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(indexPathDefaultValue)]) {
@@ -250,9 +250,9 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         }
         segue.performBlock = ^(PHAirViewControllerSegue* rvc_segue, UIViewController* svc, UIViewController* dvc)
         {
-        {
+            [self bringViewControllerToTop:dvc atIndexPath:nextIndexPath];
         };
-        };
+    }
 }
 
 #pragma mark - ContentView
@@ -260,7 +260,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (void)contentViewDidTap:(UITapGestureRecognizer *)recognizer
 {
     if (_airImageView.tag == 1) {
-    if (_airImageView.tag == 1) {
+
     }
 }
 
@@ -293,7 +293,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                            atIndexPath:self.currentIndexPath];
     }];
 }
-
 
 //- (void)handleRevealGestureOnAirImageView:(UIPanGestureRecognizer *)recognizer
 //{
@@ -332,6 +331,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 //        default:
 //            break;
 //    }
+//}
 
 #pragma mark - Gesture Based Reveal
 
@@ -341,7 +341,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         return;
     }
     
-    switch ( recognizer.state )
     switch ( recognizer.state )
     {
         case UIGestureRecognizerStateBegan:
@@ -361,6 +360,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             break;
         default:
             break;
+    }
 }
 
 - (void)handleRevealGestureStateBeganWithRecognizer:(UIPanGestureRecognizer *)recognizer
@@ -483,11 +483,11 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                           delay:0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^
-                     animations:^
     {
         self.leftView.top = -(self.leftView.height/3)*2;
     } completion:^(BOOL finished) {
         [self layoutContaintView];
+    }];
     [self rotateAirImage];
 }
 
@@ -512,7 +512,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^
      {
-     {
+         self.leftView.top = 0;
      } completion:^(BOOL finished) {
          [self layoutContaintView];
      }];
@@ -526,7 +526,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^
      {
-     {
+         self.leftView.top = -self.leftView.height/3;
      } completion:^(BOOL finished) {
      }];
     [self rotateAirImage];
@@ -585,7 +585,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     }
     thumbnailImages = [NSArray arrayWithArray:tempThumbnails];
     viewControllers = [NSArray arrayWithArray:tempViewControllers];
-    viewControllers = [NSArray arrayWithArray:tempViewControllers];
+
     
     // Get number rows of session
     NSMutableArray * temp = [NSMutableArray array];
@@ -626,7 +626,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         for (UIView * view in sessionView.containView.subviews) {
             [view removeFromSuperview];
         }
-    // Init menu item for session
+
         int firstTop = (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * heightAirMenuRow)/2;
         if (firstTop < 0) firstTop = 0;
         for (int j = 0; j < [rowsOfSession[i] intValue]; j ++) {
@@ -668,7 +668,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         
         middleSession.top = middleSession.height;
         [self.leftView addSubview:middleSession];
-        }
+        self.leftView.top = - (self.leftView.height)/3;        
         
         // Update color
         [self updateButtonColor];
@@ -884,7 +884,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     }
     
     // Create Image for airImageView
-}
+     _airImageView.image = [self imageWithView:controller.view];
     
     // Save thumbnail
     [self saveThumbnailImage:_airImageView.image atIndexPath:self.currentIndexPath];
@@ -919,20 +919,20 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^
      {
-    self.airImageView.layer.transform = CATransform3DIdentity;
-    self.contentView.layer.transform  = CATransform3DIdentity;
-    
-    CATransform3D leftTransform = CATransform3DIdentity;
-    leftTransform = CATransform3DTranslate(leftTransform, kLeftViewTransX , 0, 0);
-    leftTransform = CATransform3DRotate(leftTransform, AirDegreesToRadians(kLeftViewRotate), 0, 1, 0);
-    self.leftView.layer.transform = leftTransform;
-    
-    self.rightView.alpha = 1;
-    self.leftView.alpha  = 0;
-    
-    [UIView animateWithDuration:kDuration
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
+         self.leftView.alpha = 1;
+         
+         CATransform3D airImageRotate = self.airImageView.layer.transform;
+         airImageRotate = CATransform3DRotate(airImageRotate, AirDegreesToRadians(kAirImageViewRotate), 0, 1, 0);
+         self.airImageView.layer.transform = airImageRotate;
+         
+         CATransform3D rightTransform = self.rightView.layer.transform;
+         rightTransform = CATransform3DTranslate(rightTransform, kRightViewTransX, 0, kRightViewTransZ);
+         self.rightView.layer.transform = rightTransform;
+         
+         CATransform3D leftTransform = self.leftView.layer.transform;
+         leftTransform = CATransform3DRotate(leftTransform, AirDegreesToRadians(-kLeftViewRotate), 0, 1, 0);
+         leftTransform = CATransform3DTranslate(leftTransform, -kLeftViewTransX , 0, 0);
+         self.leftView.layer.transform = leftTransform;
      } completion:^(BOOL finished) {
          if (complete) complete();
      }];
@@ -963,20 +963,20 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^
      {
-{
-    [self bringViewControllerToTop:controller
-                       atIndexPath:kIndexPathOutMenu];
-}
-
-- (void)hideAirViewOnComplete:(void (^)(void))complete
-{
-    if (self.delegate && [self.delegate respondsToSelector:@selector(willHideAirViewController)]) {
-        [self.delegate willHideAirViewController];
-    }
-    
-    [UIView animateWithDuration:kDuration
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
+         self.leftView.alpha = 0;
+         
+         CATransform3D airImageRotate = self.airImageView.layer.transform;
+         airImageRotate = CATransform3DRotate(airImageRotate, AirDegreesToRadians(-kAirImageViewRotate), 0, 1, 0);
+         self.airImageView.layer.transform = airImageRotate;
+         
+         CATransform3D rightTransform = self.rightView.layer.transform;
+         rightTransform = CATransform3DTranslate(rightTransform, -kRightViewTransX, 0, -kRightViewTransZ);
+         self.rightView.layer.transform = rightTransform;
+         
+         CATransform3D leftTransform = self.leftView.layer.transform;
+         leftTransform = CATransform3DRotate(leftTransform, AirDegreesToRadians(kLeftViewRotate), 0, 1, 0);
+         leftTransform = CATransform3DTranslate(leftTransform, kLeftViewTransX , 0, 0);
+         self.leftView.layer.transform = leftTransform;
      } completion:^(BOOL finished) {
          self.rightView.alpha = 0;
          self.leftView.alpha = 0;
@@ -1026,9 +1026,9 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     
     // Setup contentView to transform
     /*
-    self.contentView.layer.sublayerTransform = rotationAndPerspectiveTransform2;
-    CGPoint anchorPoint2 = CGPointMake(1, 0.5);
-    CGFloat newX2 = self.rightView.width * anchorPoint2.x;
+    CATransform3D rotationAndPerspectiveTransform3 = CATransform3DIdentity;
+    rotationAndPerspectiveTransform3.m34 = 1.0 / -600;
+    self.wrapperView.layer.sublayerTransform = rotationAndPerspectiveTransform3;
      */
     
     CGPoint anchorPoint3 = CGPointMake(1, 0.5);
