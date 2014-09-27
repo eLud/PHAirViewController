@@ -15,7 +15,7 @@
     PHAirViewAppearanceLayout *l = [PHAirViewAppearanceLayout new];
     l.titleNormalColor = [UIColor colorWithRed:0.45 green:0.45 blue:0.45 alpha:1];
     l.titleHighlightColor = [UIColor blackColor];
-    l.titleSelectedColor = [UIColor blackColor];
+    l.titleSelectedColor = [UIColor blueColor];
     
     l.sectionTitleColor = [UIColor blackColor];
     

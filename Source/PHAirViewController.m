@@ -789,11 +789,11 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (void)rowDidTouch:(UIButton*)button
 {
     // Save row touch in session
-    lastIndexInSession[@(currentIndexSession)] = @(button.superview.tag);
+    lastIndexInSession[@(currentIndexSession)] = @(button.tag);
     
     self.currentIndexPath = [NSIndexPath indexPathForRow:button.tag
                                                inSection:button.superview.tag];
-    
+  
     // Should select ?
     if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSelectRowAtIndex:)]) {
         if (![self.delegate shouldSelectRowAtIndex:self.currentIndexPath]) {
@@ -804,7 +804,9 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectRowAtIndex:)]) {
         [self.delegate didSelectRowAtIndex:self.currentIndexPath];
     }
-    
+  
+    [self updateButtonColor];
+
     // Get thumbnailImage
     UIImage * nextThumbnail = [self getThumbnailImageAtIndexPath:self.currentIndexPath];
     if (nextThumbnail) {
