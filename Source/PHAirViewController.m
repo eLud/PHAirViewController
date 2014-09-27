@@ -126,6 +126,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         self.view.frame = CGRectMake(0, 0, rect.size.width, rect.size.height);
         [self bringViewControllerToTop:viewController
                            atIndexPath:indexPath];
+        _appearanceLayout = appearanceLayout;
     }
     return self;
 }
@@ -635,6 +636,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             [view removeFromSuperview];
         }
 
+
         CGFloat buttonY = 0;
         switch (_appearanceLayout.rowsContentMode) {
             case PHAirViewAppearanceLayoutContentModeCenter:
@@ -774,8 +776,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 
 - (NSString*)titleForRowAtIndexPath:(NSIndexPath*)indexPath { return @""; }
 
-- (UIImage*)viewControllerSnapshotAtIndexPath:(NSIndexPath*)indexPath { return nil; }
-
 #pragma mark - Button action
 
 - (void)sessionButtonTouch:(UIButton*)button
@@ -899,8 +899,12 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         [self.delegate willShowAirViewController];
     }
     
-    // Create Image for airImageView
-     _airImageView.image = [self imageWithView:controller.view];
+    // Create Image for airImageView (either from dataSource or manually generate)
+    if ([self.dataSource respondsToSelector:@selector(viewControllerSnapshotAtIndexPath:)]) {
+        _airImageView.image = [self.dataSource viewControllerSnapshotAtIndexPath:self.currentIndexPath];
+    } else {
+        _airImageView.image = [self imageWithView:controller.view];
+    }
     
     // Save thumbnail
     [self saveThumbnailImage:_airImageView.image atIndexPath:self.currentIndexPath];

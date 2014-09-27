@@ -51,6 +51,7 @@
 - (instancetype)initWithRootViewController:(UIViewController*)viewController atIndexPath:(NSIndexPath*)indexPath;
 - (instancetype)initWithRootViewController:(UIViewController*)viewController atIndexPath:(NSIndexPath*)indexPath appearanceLayout:(PHAirViewAppearanceLayout *)appearanceLayout;
 
+
 - (void)reloadData;
 - (void)showAirViewFromViewController:(UIViewController*)controller complete:(void (^)(void))complete;
 - (void)switchToViewController:(UIViewController*)controller atIndexPath:(NSIndexPath*)indexPath;
