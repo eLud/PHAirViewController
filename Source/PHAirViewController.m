@@ -883,8 +883,12 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         [self.delegate willShowAirViewController];
     }
     
-    // Create Image for airImageView
-     _airImageView.image = [self imageWithView:controller.view];
+    // Create Image for airImageView (either from dataSource or manually generate)
+    if ([self.dataSource respondsToSelector:@selector(viewControllerSnapshotAtIndexPath:)]) {
+        _airImageView.image = [self.dataSource viewControllerSnapshotAtIndexPath:self.currentIndexPath];
+    } else {
+        _airImageView.image = [self imageWithView:controller.view];
+    }
     
     // Save thumbnail
     [self saveThumbnailImage:_airImageView.image atIndexPath:self.currentIndexPath];
