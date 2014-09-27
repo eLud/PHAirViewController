@@ -613,6 +613,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                     break;
             }
             sessionView.titleButton.backgroundColor = [UIColor blueColor];
+            sessionView.titleButton.constrainImage = YES;
             sessionView.titleButton.frame = CGRectMake(_appearanceLayout.sectionEdgeInsets.left, buttonY, kSessionWidth, _appearanceLayout.sectionContentHeight);
             [sessionViews setObject:sessionView forKey:@(i)];
             sessionView.backgroundColor = [UIColor yellowColor];
@@ -623,7 +624,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         
         if ([self.dataSource respondsToSelector:@selector(thumbnailForHeaderAtSession:)]) {
             [sessionView.titleButton setImageForSingleState:[self.dataSource thumbnailForHeaderAtSession:i]];
-            sessionView.titleButton.imageView.contentMode = UIViewContentModeCenter;
             sessionView.titleButton.titleImagePadding = _appearanceLayout.paddingBetweenThumbnailAndTitleInSection;
         }
     }
@@ -658,7 +658,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             [button setTitleColor:_appearanceLayout.titleSelectedColor forState:UIControlStateSelected];
             button.titleLabel.font = _appearanceLayout.rowTitleFont;
             button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-            
+            button.constrainImage = YES;
             if ([self.dataSource respondsToSelector:@selector(thumbnailForRowAtIndexPath:)]) {
                 [button setImage:[self.dataSource thumbnailForRowAtIndexPath:indexPath] forState:UIControlStateNormal];
                 button.titleImagePadding = _appearanceLayout.paddingBetweenThumbnailAndTitleInRow;

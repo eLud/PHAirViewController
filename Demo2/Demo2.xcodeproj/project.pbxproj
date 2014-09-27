@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38B6776219D69025009F8291 /* google.png in Resources */ = {isa = PBXBuildFile; fileRef = 38B6776119D69025009F8291 /* google.png */; };
 		480453FB18AB91C80019A0D0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 480453FA18AB91C80019A0D0 /* Foundation.framework */; };
 		480453FD18AB91C80019A0D0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 480453FC18AB91C80019A0D0 /* CoreGraphics.framework */; };
 		480453FF18AB91C80019A0D0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 480453FE18AB91C80019A0D0 /* UIKit.framework */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		37362609F30F4F4A9A8C6CA5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		38B6776119D69025009F8291 /* google.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = google.png; sourceTree = "<group>"; };
 		480453F718AB91C80019A0D0 /* Demo2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		480453FA18AB91C80019A0D0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		480453FC18AB91C80019A0D0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -108,6 +110,7 @@
 		4804540118AB91C80019A0D0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				38B6776119D69025009F8291 /* google.png */,
 				4804540218AB91C80019A0D0 /* Demo2-Info.plist */,
 				4804540318AB91C80019A0D0 /* InfoPlist.strings */,
 				4804540618AB91C80019A0D0 /* main.m */,
@@ -208,6 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4804540518AB91C80019A0D0 /* InfoPlist.strings in Resources */,
+				38B6776219D69025009F8291 /* google.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

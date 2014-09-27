@@ -38,6 +38,11 @@
     return [NSString stringWithFormat:@"Session %ld", (long)session];
 }
 
+- (UIImage *)thumbnailForHeaderAtSession:(NSInteger)session
+{
+    return [UIImage imageNamed:@"google"];
+}
+
 - (UIViewController*)viewControllerForIndexPath:(NSIndexPath*)indexPath
 {
     PHViewController * viewController = [[PHViewController alloc] init];

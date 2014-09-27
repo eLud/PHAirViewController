@@ -18,5 +18,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) CGFloat titleImagePadding;
 @property (nonatomic, assign) PPImageTitleButtonContentMode buttonContentMode;
 
+@property (nonatomic, assign) BOOL constrainImage;
+
 - (void)setImageForSingleState:(UIImage *)image;
 @end

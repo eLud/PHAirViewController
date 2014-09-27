@@ -28,7 +28,14 @@
 {
     [super layoutSubviews];
     CGRect imageFrame = self.imageView.frame;
+    [self.titleLabel  sizeToFit];
     CGRect titleFrame = self.titleLabel.frame;
+
+    if (_constrainImage) {
+        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        CGFloat minSize = MIN(imageFrame.size.width, imageFrame.size.height);
+        imageFrame.size = CGSizeMake(minSize, minSize);
+    }
 
     CGFloat xStartingPoint = 0;
     switch (_buttonContentMode) {
@@ -44,7 +51,9 @@
     }
     
     imageFrame.origin.x = xStartingPoint;
+    imageFrame.origin.y = (CGRectGetHeight(self.bounds) - CGRectGetHeight(imageFrame)) / 2;
     titleFrame.origin.x = CGRectGetMaxX(imageFrame) + _titleImagePadding;
+    titleFrame.origin.y = (CGRectGetHeight(self.bounds) - CGRectGetHeight(titleFrame)) / 2;
     
     self.imageView.frame = imageFrame;
     self.titleLabel.frame = titleFrame;
