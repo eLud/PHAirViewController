@@ -33,6 +33,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 #import "UIViewAdditions.h"
+#import "PPImageTitleButton.h"
 
 #define kMenuItemHeight 80
 #define kSessionWidth   220
@@ -599,16 +600,22 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         PHSessionView * sessionView = sessionViews[@(i)];
         if (!sessionView) {
             sessionView = [[PHSessionView alloc] initWithFrame:CGRectMake(30, 0, kSessionWidth, sessionHeight)];
-            [sessionView.button setTitleColor:[UIColor colorWithRed:0.45 green:0.45 blue:0.45 alpha:1] forState:UIControlStateNormal];
-            sessionView.button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
-            sessionView.button.tag = i;
-            [sessionView.button addTarget:self action:@selector(sessionButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
+            [sessionView.titleButton setTitleColor:[UIColor colorWithRed:0.45 green:0.45 blue:0.45 alpha:1] forState:UIControlStateNormal];
+            sessionView.titleButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
+            sessionView.titleButton.tag = i;
+            [sessionView.titleButton addTarget:self action:@selector(sessionButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
             [sessionViews setObject:sessionView forKey:@(i)];
         }
         // Set title for header session
-        if ([self.dataSource respondsToSelector:@selector(titleForHeaderAtSession:)]) {
-            NSString * sesionTitle = [self.dataSource titleForHeaderAtSession:i];
-            [sessionView.button setTitle:sesionTitle forState:UIControlStateNormal];
+        NSString * sesionTitle = [self.dataSource titleForHeaderAtSession:i];
+        [sessionView.titleButton setTitle:sesionTitle forState:UIControlStateNormal];
+        
+        if ([self.dataSource respondsToSelector:@selector(thumbnailForHeaderAtSession:)]) {
+            [sessionView.titleButton setImageForSingleState:[self.dataSource thumbnailForHeaderAtSession:i]];
+            sessionView.titleButton.imageView.contentMode = UIViewContentModeCenter;
+            if ([self.delegate respondsToSelector:@selector(thumbnailAndTitlePaddingForHeaderAtSession:)]) {
+                sessionView.titleButton.titleImagePadding = [self.delegate thumbnailAndTitlePaddingForHeaderAtSession:i];
+            }
         }
     }
     
@@ -623,8 +630,9 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         int firstTop = (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * heightAirMenuRow)/2;
         if (firstTop < 0) firstTop = 0;
         for (int j = 0; j < [rowsOfSession[i] intValue]; j ++) {
-            NSString * title = [self.dataSource titleForRowAtIndexPath:[NSIndexPath indexPathForRow:j inSection:i]];
-            UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
+            NSString * title = [self.dataSource titleForRowAtIndexPath:indexPath];
+            PPImageTitleButton * button = [[PPImageTitleButton alloc] initWithFrame:CGRectZero];
             [button setTitle:title forState:UIControlStateNormal];
             [button addTarget:self action:@selector(rowDidTouch:) forControlEvents:UIControlEventTouchUpInside];
             [button setTitleColor:_titleNormalColor forState:UIControlStateNormal];
@@ -632,7 +640,15 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             [button setTitleColor:_titleHighlightColor forState:UIControlStateSelected];
             button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
             button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-            button.frame = CGRectMake(0, firstTop + heightAirMenuRow*j, 200, heightAirMenuRow);
+            
+            if ([self.dataSource respondsToSelector:@selector(thumbnailForRowAtIndexPath:)]) {
+                [button setImage:[self.dataSource thumbnailForRowAtIndexPath:indexPath] forState:UIControlStateNormal];
+                if ([self.delegate respondsToSelector:@selector(thumbnailAndTitlePaddingForRowAtIndexPath:)]) {
+                    button.titleImagePadding = [self.delegate thumbnailAndTitlePaddingForRowAtIndexPath:indexPath];
+                }
+            }
+            [button sizeToFit];
+            button.frame = CGRectMake(0, firstTop + heightAirMenuRow*j, MIN(CGRectGetWidth(button.bounds), 200), heightAirMenuRow);
             button.tag = j;
             sessionView.containView.tag = i;
             [sessionView.containView addSubview:button];
@@ -742,7 +758,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 
 - (NSString*)titleForRowAtIndexPath:(NSIndexPath*)indexPath { return @""; }
 
-- (UIImage*)thumbnailImageAtIndexPath:(NSIndexPath*)indexPath { return nil; }
+- (UIImage*)viewControllerSnapshotAtIndexPath:(NSIndexPath*)indexPath { return nil; }
 
 #pragma mark - Button action
 
@@ -1031,8 +1047,8 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     if (thumbnailDic[@(indexPath.row)]) {
         return thumbnailDic[@(indexPath.row)];
     } else {
-        if ([self.dataSource respondsToSelector:@selector(thumbnailImageAtIndexPath:)]) {
-            return [self.dataSource thumbnailImageAtIndexPath:indexPath];
+        if ([self.dataSource respondsToSelector:@selector(viewControllerSnapshotAtIndexPath:)]) {
+            return [self.dataSource viewControllerSnapshotAtIndexPath:indexPath];
         }
     }
     return nil;

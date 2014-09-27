@@ -22,6 +22,8 @@
 - (float)heightForAirMenuRow;
 - (NSIndexPath*)indexPathDefaultValue;
 
+- (CGFloat)thumbnailAndTitlePaddingForHeaderAtSession:(NSInteger)session;
+- (CGFloat)thumbnailAndTitlePaddingForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @protocol PHAirMenuDataSource <NSObject>
@@ -30,8 +32,13 @@
 - (NSInteger)numberOfRowsInSession:(NSInteger)sesion;
 - (NSString*)titleForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (NSString*)titleForHeaderAtSession:(NSInteger)session;
+
 @optional
-- (UIImage*)thumbnailImageAtIndexPath:(NSIndexPath*)indexPath;
+- (UIImage *)thumbnailForHeaderAtSession:(NSInteger)session;
+- (UIImage *)thumbnailForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+// thumbnailImage for the Present View Controller
+- (UIImage*)viewControllerSnapshotAtIndexPath:(NSIndexPath*)indexPath;
 - (NSString*)segueForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (UIViewController*)viewControllerForIndexPath:(NSIndexPath*)indexPath;
 @end

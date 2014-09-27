@@ -7,26 +7,27 @@
 //
 
 #import "PHSessionView.h"
-
+#import "PPImageTitleButton.h"
 @implementation PHSessionView
 
 #pragma mark - property
 
-- (UIButton*)button
+- (PPImageTitleButton*)titleButton
 {
-    if (!_button) {
-        _button = [UIButton buttonWithType:UIButtonTypeCustom];
-        _button.frame = CGRectMake(0, 40, self.frame.size.width, kHeaderTitleHeight-40);
-        _button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        [self addSubview:_button];
+    if (!_titleButton) {
+        _titleButton = [[PPImageTitleButton alloc] initWithFrame:CGRectZero];
+        _titleButton.frame = CGRectMake(0, 40, self.frame.size.width, kHeaderTitleHeight-40);
+        _titleButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [self addSubview:_titleButton];
     }
-    return _button;
+    return _titleButton;
 }
 
 - (UIView*)containView
 {
     if (!_containView) {
         _containView = [[UIView alloc] initWithFrame:CGRectMake(0, kHeaderTitleHeight + 20, self.frame.size.width, self.frame.size.height - kHeaderTitleHeight)];
+        _containView.backgroundColor = [UIColor redColor];
         [self addSubview:_containView];
     }
     return _containView;
@@ -36,8 +37,8 @@
 
 - (void)dealloc
 {
-    [_button removeFromSuperview];
-    _button = nil;
+    [_titleButton removeFromSuperview];
+    _titleButton = nil;
     [_containView removeFromSuperview];
     _containView = nil;
 }

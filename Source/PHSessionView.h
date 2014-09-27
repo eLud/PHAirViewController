@@ -10,9 +10,10 @@
 
 #define kHeaderTitleHeight   80
 
+@class PPImageTitleButton;
 @interface PHSessionView : UIView
 
-@property (nonatomic, strong) UIButton * button;
+@property (nonatomic, strong) PPImageTitleButton * titleButton;
 @property (nonatomic, strong) UIView   * containView;
 
 @end

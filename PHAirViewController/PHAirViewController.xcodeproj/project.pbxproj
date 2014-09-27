@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38BC4A7A19D6431F00F1C7A3 /* PPImageTitleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 38BC4A7919D6431F00F1C7A3 /* PPImageTitleButton.m */; };
 		4882D84B18D19DBF00CA0012 /* Main-ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4882D84A18D19DBF00CA0012 /* Main-ipad.storyboard */; };
 		489325E918AA5D6A00B6D392 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48F2B37418AA51F400B47D4B /* Main.storyboard */; };
 		48F2B36318AA51F400B47D4B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F2B36218AA51F400B47D4B /* Foundation.framework */; };
@@ -41,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		38BC4A7819D6431F00F1C7A3 /* PPImageTitleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPImageTitleButton.h; sourceTree = "<group>"; };
+		38BC4A7919D6431F00F1C7A3 /* PPImageTitleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPImageTitleButton.m; sourceTree = "<group>"; };
 		4882D84A18D19DBF00CA0012 /* Main-ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main-ipad.storyboard"; sourceTree = "<group>"; };
 		48F2B35F18AA51F400B47D4B /* PHAirViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PHAirViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F2B36218AA51F400B47D4B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -213,6 +216,8 @@
 				48F2B3AA18AA52A400B47D4B /* PHAirViewController.m */,
 				48F2B3AD18AA52A400B47D4B /* PHSessionView.h */,
 				48F2B3AE18AA52A400B47D4B /* PHSessionView.m */,
+				38BC4A7819D6431F00F1C7A3 /* PPImageTitleButton.h */,
+				38BC4A7919D6431F00F1C7A3 /* PPImageTitleButton.m */,
 			);
 			name = Source;
 			path = ../../Source;
@@ -324,6 +329,7 @@
 				48F2B39E18AA527A00B47D4B /* PHMenuViewController.m in Sources */,
 				48F2B3A018AA527A00B47D4B /* PHViewController.m in Sources */,
 				48F2B36F18AA51F400B47D4B /* main.m in Sources */,
+				38BC4A7A19D6431F00F1C7A3 /* PPImageTitleButton.m in Sources */,
 				48F2B3B318AA52A400B47D4B /* PHSessionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
