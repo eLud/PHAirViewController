@@ -371,17 +371,17 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (void)handleRevealGestureStateChangedWithRecognizer:(UIPanGestureRecognizer *)recognizer
 {
     CGFloat translation = [recognizer translationInView:self.leftView].y;
-    self.leftView.top = -(self.view.height - kHeaderTitleHeight) + translation;
+    self.leftView.top = -(self.view.height - _appearanceLayout.heightAirMenuSection) + translation;
     
     // Vị trí y của contentView khi ở chế độ bình thường
-    int firstTop = - (self.view.height - kHeaderTitleHeight);
+    int firstTop = - (self.view.height - _appearanceLayout.heightAirMenuSection);
     // Vị trí y hiện tại của contentView khi scroll
     int afterTop = self.leftView.top;
     
     // Điểm center bình thường của contentView : self.view.height/2
     // Khi scroll lên và scroll xuống thì độ chênh lệch của contentView là self.view.height/2
     
-    int sessionViewHeight = self.view.height - kHeaderTitleHeight;
+    int sessionViewHeight = self.view.height - _appearanceLayout.heightAirMenuSection;
     int distanceScroll = 0;
     // Nếu là kéo xuống
     if (afterTop - firstTop > 0) {
@@ -427,7 +427,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     }
     
     // Vị trí y của contentView khi ở chế độ bình thường
-    int firstTop = - (self.view.height - kHeaderTitleHeight);
+    int firstTop = - (self.view.height - _appearanceLayout.heightAirMenuSection);
     // Vị trí y hiện tại của contentView khi scroll
     int afterTop = self.leftView.top;
     
@@ -631,6 +631,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     // Init menu item for session
     for (int i = 0; i < session; i ++) {
         PHSessionView * sessionView = sessionViews[@(i)];
+        sessionView.containView.frame = CGRectMake(0, _appearanceLayout.heightAirMenuSection, kSessionWidth, sessionHeight - _appearanceLayout.heightAirMenuSection);
         // Remove all sub-view for contain of PHSessionView
         for (UIView * view in sessionView.containView.subviews) {
             [view removeFromSuperview];
@@ -871,7 +872,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 {
     if (!_leftView) {
         // leftView content sessionView
-        _leftView = [[UIView alloc] initWithFrame:CGRectMake(0, -(self.view.height - kHeaderTitleHeight), kSessionWidth, (self.view.height - kHeaderTitleHeight)*3)];
+        _leftView = [[UIView alloc] initWithFrame:CGRectMake(0, -(self.view.height - _appearanceLayout.heightAirMenuSection), kSessionWidth, (self.view.height - _appearanceLayout.heightAirMenuSection)*3)];
         _leftView.userInteractionEnabled = YES;
     }
     return _leftView;

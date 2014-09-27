@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#define kHeaderTitleHeight   80
-
 @class PPImageTitleButton;
 @interface PHSessionView : UIView
 

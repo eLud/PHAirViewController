@@ -25,7 +25,7 @@
 - (UIView*)containView
 {
     if (!_containView) {
-        _containView = [[UIView alloc] initWithFrame:CGRectMake(0, kHeaderTitleHeight, self.frame.size.width, self.frame.size.height - kHeaderTitleHeight)];
+        _containView = [[UIView alloc] initWithFrame:CGRectZero];
         _containView.backgroundColor = [UIColor redColor];
         [self addSubview:_containView];
     }
