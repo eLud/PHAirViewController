@@ -612,11 +612,9 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                     buttonY = _appearanceLayout.heightAirMenuSection - _appearanceLayout.sectionContentHeight - _appearanceLayout.sectionEdgeInsets.bottom;
                     break;
             }
-            sessionView.titleButton.backgroundColor = [UIColor blueColor];
             sessionView.titleButton.constrainImage = YES;
             sessionView.titleButton.frame = CGRectMake(_appearanceLayout.sectionEdgeInsets.left, buttonY, kSessionWidth, _appearanceLayout.sectionContentHeight);
             [sessionViews setObject:sessionView forKey:@(i)];
-            sessionView.backgroundColor = [UIColor yellowColor];
         }
         // Set title for header session
         NSString * sesionTitle = [self.dataSource titleForHeaderAtSession:i];
