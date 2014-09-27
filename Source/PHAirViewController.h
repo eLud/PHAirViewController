@@ -48,8 +48,8 @@
 @property (nonatomic, strong) UIColor * titleNormalColor;
 @property (nonatomic, strong) UIColor * titleHighlightColor;
 
-@property (nonatomic, assign) id <PHAirMenuDelegate>   delegate;
-@property (nonatomic, assign) id <PHAirMenuDataSource> dataSource;
+@property (nonatomic, weak) id <PHAirMenuDelegate>   delegate;
+@property (nonatomic, weak) id <PHAirMenuDataSource> dataSource;
 
 @property (nonatomic, readonly) UIViewController * fontViewController;
 @property (nonatomic, strong)   NSIndexPath      * currentIndexPath;
