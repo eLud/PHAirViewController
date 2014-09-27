@@ -19,11 +19,7 @@
 - (void)willHideAirViewController;
 - (void)didHideAirViewController;
 
-- (float)heightForAirMenuRow;
 - (NSIndexPath*)indexPathDefaultValue;
-
-- (CGFloat)thumbnailAndTitlePaddingForHeaderAtSession:(NSInteger)session;
-- (CGFloat)thumbnailAndTitlePaddingForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @protocol PHAirMenuDataSource <NSObject>
@@ -43,16 +39,8 @@
 - (UIViewController*)viewControllerForIndexPath:(NSIndexPath*)indexPath;
 @end
 
+@class PHAirViewAppearanceLayout;
 @interface PHAirViewController : UIViewController <PHAirMenuDelegate, PHAirMenuDataSource, UIGestureRecognizerDelegate>
-
-@property (nonatomic, strong) UIColor * titleNormalColor;
-@property (nonatomic, strong) UIColor * titleHighlightColor;
-@property (nonatomic, strong) UIColor * titleSelectedColor;
-
-@property (nonatomic, strong) UIColor * sectionTitleColor;
-
-@property (nonatomic, strong) UIFont *sectionTitleFont;
-@property (nonatomic, strong) UIFont *rowTitleFont;
 
 @property (nonatomic, assign) id <PHAirMenuDelegate>   delegate;
 @property (nonatomic, assign) id <PHAirMenuDataSource> dataSource;
@@ -60,7 +48,8 @@
 @property (nonatomic, readonly) UIViewController * fontViewController;
 @property (nonatomic, strong)   NSIndexPath      * currentIndexPath;
 
-- (id)initWithRootViewController:(UIViewController*)viewController atIndexPath:(NSIndexPath*)indexPath;
+- (instancetype)initWithRootViewController:(UIViewController*)viewController atIndexPath:(NSIndexPath*)indexPath;
+- (instancetype)initWithRootViewController:(UIViewController*)viewController atIndexPath:(NSIndexPath*)indexPath appearanceLayout:(PHAirViewAppearanceLayout *)appearanceLayout;
 
 - (void)reloadData;
 - (void)showAirViewFromViewController:(UIViewController*)controller complete:(void (^)(void))complete;

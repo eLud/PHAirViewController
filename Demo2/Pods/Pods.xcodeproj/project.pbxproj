@@ -12,7 +12,8 @@
 		2D11504B9D59424E93E58E30 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B3440244664A0BB7C96609 /* Foundation.framework */; };
 		30562033471F4C0FBFE9D68C /* Pods-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D8129168FED84D47B7D57DCE /* Pods-dummy.m */; };
 		3409740636FE4BE9B2A91788 /* PHSessionView.h in Headers */ = {isa = PBXBuildFile; fileRef = E528C7191BD944428BF108B2 /* PHSessionView.h */; };
-		38B6775A19D66F65009F8291 /* PHAirViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B6775919D66F65009F8291 /* PHAirViewLayout.m */; };
+		38B6775A19D66F65009F8291 /* PHAirViewAppearanceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B6775919D66F65009F8291 /* PHAirViewAppearanceLayout.m */; };
+		38B6776019D68269009F8291 /* PPImageTitleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B6775F19D68269009F8291 /* PPImageTitleButton.m */; };
 		4BFF001CDDED46F5B1D1F83C /* PHSessionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AED965099D24143A731ABAA /* PHSessionView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		6C8724A049974C878BF5C5F1 /* PHAirViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D0B443250814DEA8866BBC1 /* PHAirViewController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		6FDA802B661743FF88F13F64 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B3440244664A0BB7C96609 /* Foundation.framework */; };
@@ -34,8 +35,10 @@
 /* Begin PBXFileReference section */
 		24390657E4EF43BAA5CE41AF /* Pods-PHAirView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-PHAirView-prefix.pch"; sourceTree = "<group>"; };
 		2B8A05D36B944D13961CD8C1 /* PHAirViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PHAirViewController.h; path = Source/PHAirViewController.h; sourceTree = "<group>"; };
-		38B6775819D66F65009F8291 /* PHAirViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PHAirViewLayout.h; path = Source/PHAirViewLayout.h; sourceTree = "<group>"; };
-		38B6775919D66F65009F8291 /* PHAirViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PHAirViewLayout.m; path = Source/PHAirViewLayout.m; sourceTree = "<group>"; };
+		38B6775819D66F65009F8291 /* PHAirViewAppearanceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PHAirViewAppearanceLayout.h; path = Source/PHAirViewAppearanceLayout.h; sourceTree = "<group>"; };
+		38B6775919D66F65009F8291 /* PHAirViewAppearanceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PHAirViewAppearanceLayout.m; path = Source/PHAirViewAppearanceLayout.m; sourceTree = "<group>"; };
+		38B6775E19D68269009F8291 /* PPImageTitleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPImageTitleButton.h; path = Source/PPImageTitleButton.h; sourceTree = "<group>"; };
+		38B6775F19D68269009F8291 /* PPImageTitleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PPImageTitleButton.m; path = Source/PPImageTitleButton.m; sourceTree = "<group>"; };
 		4AED965099D24143A731ABAA /* PHSessionView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = PHSessionView.m; path = Source/PHSessionView.m; sourceTree = "<group>"; };
 		6AD21B4B5C3B456D978BF9BA /* UIViewAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = UIViewAdditions.h; path = Source/Library/KNAdditions/UIViewAdditions.h; sourceTree = "<group>"; };
 		6E5C0B9142254645A9600566 /* Pods-PHAirView-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PHAirView-Private.xcconfig"; sourceTree = "<group>"; };
@@ -156,14 +159,16 @@
 		EB86FA089D254234B5E76466 /* PHAirView */ = {
 			isa = PBXGroup;
 			children = (
-				38B6775819D66F65009F8291 /* PHAirViewLayout.h */,
-				38B6775919D66F65009F8291 /* PHAirViewLayout.m */,
+				38B6775819D66F65009F8291 /* PHAirViewAppearanceLayout.h */,
+				38B6775919D66F65009F8291 /* PHAirViewAppearanceLayout.m */,
 				2B8A05D36B944D13961CD8C1 /* PHAirViewController.h */,
 				8D0B443250814DEA8866BBC1 /* PHAirViewController.m */,
 				E528C7191BD944428BF108B2 /* PHSessionView.h */,
 				4AED965099D24143A731ABAA /* PHSessionView.m */,
 				6AD21B4B5C3B456D978BF9BA /* UIViewAdditions.h */,
 				F5173328D32E4F63B5499C97 /* UIViewAdditions.m */,
+				38B6775E19D68269009F8291 /* PPImageTitleButton.h */,
+				38B6775F19D68269009F8291 /* PPImageTitleButton.m */,
 				BD3F2D32B75D4B6BA6E94FDB /* Support Files */,
 			);
 			name = PHAirView;
@@ -263,7 +268,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				30562033471F4C0FBFE9D68C /* Pods-dummy.m in Sources */,
-				38B6775A19D66F65009F8291 /* PHAirViewLayout.m in Sources */,
+				38B6776019D68269009F8291 /* PPImageTitleButton.m in Sources */,
+				38B6775A19D66F65009F8291 /* PHAirViewAppearanceLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

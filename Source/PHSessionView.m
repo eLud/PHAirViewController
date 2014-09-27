@@ -16,7 +16,6 @@
 {
     if (!_titleButton) {
         _titleButton = [[PPImageTitleButton alloc] initWithFrame:CGRectZero];
-        _titleButton.frame = CGRectMake(0, 40, self.frame.size.width, kHeaderTitleHeight-40);
         _titleButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [self addSubview:_titleButton];
     }
@@ -26,7 +25,7 @@
 - (UIView*)containView
 {
     if (!_containView) {
-        _containView = [[UIView alloc] initWithFrame:CGRectMake(0, kHeaderTitleHeight + 20, self.frame.size.width, self.frame.size.height - kHeaderTitleHeight)];
+        _containView = [[UIView alloc] initWithFrame:CGRectMake(0, kHeaderTitleHeight, self.frame.size.width, self.frame.size.height - kHeaderTitleHeight)];
         _containView.backgroundColor = [UIColor redColor];
         [self addSubview:_containView];
     }

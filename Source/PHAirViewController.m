@@ -34,6 +34,7 @@
 #import <objc/runtime.h>
 #import "UIViewAdditions.h"
 #import "PPImageTitleButton.h"
+#import "PHAirViewAppearanceLayout.h"
 
 #define kMenuItemHeight 80
 #define kSessionWidth   220
@@ -68,6 +69,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 // pan for scroll
 @property (nonatomic, strong) UIPanGestureRecognizer * panGestureRecognizer;
 
+@property (nonatomic, strong) PHAirViewAppearanceLayout *appearanceLayout;
 @end
 
 @implementation PHAirViewController {
@@ -105,16 +107,21 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
      ]
      */
     NSArray * viewControllers;
-    
-    float heightAirMenuRow;
 }
 
 @synthesize contentView = _contentView, airImageView = _airImageView;
 
-- (id)initWithRootViewController:(UIViewController*)viewController
+- (instancetype)initWithRootViewController:(UIViewController *)viewController atIndexPath:(NSIndexPath *)indexPath
+{
+    return [self initWithRootViewController:viewController atIndexPath:indexPath appearanceLayout:[PHAirViewAppearanceLayout defaultAppearanceLayout]];
+}
+
+- (instancetype)initWithRootViewController:(UIViewController*)viewController
                      atIndexPath:(NSIndexPath*)indexPath
+                appearanceLayout:(PHAirViewAppearanceLayout *)appearanceLayout
 {
     if (self = [super init]) {
+        _appearanceLayout = appearanceLayout;
         CGRect rect = [UIScreen mainScreen].applicationFrame;
         self.view.frame = CGRectMake(0, 0, rect.size.width, rect.size.height);
         [self bringViewControllerToTop:viewController
@@ -153,15 +160,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     // Init airImageView
     [self.rightView addSubview:self.airImageView];
     
-    // Setting color
-    _titleNormalColor    = [UIColor colorWithRed:0.45 green:0.45 blue:0.45 alpha:1];
-    _titleHighlightColor = [UIColor blackColor];
-    _titleSelectedColor = [UIColor redColor];
-    _sectionTitleColor = [UIColor colorWithRed:0.45 green:0.45 blue:0.45 alpha:1];
-
-    _sectionTitleFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
-    _rowTitleFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
-  
     // Init root view controller
     if ( self.storyboard) {
         @try {
@@ -195,9 +193,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     
     self.leftView.alpha = 0;
     self.rightView.alpha = 0;
-    
-     // Default height row value
-    heightAirMenuRow = 44;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -576,11 +571,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     // Get number session
     session = [self.dataSource numberOfSession];
     
-    // Get height
-    if ([self.delegate respondsToSelector:@selector(heightForAirMenuRow)]) {
-        heightAirMenuRow = [self.delegate heightForAirMenuRow];
-    }
-    
     // Init
     NSMutableArray * tempThumbnails = [NSMutableArray array];
     NSMutableArray * tempViewControllers = [NSMutableArray array];
@@ -600,16 +590,31 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     rowsOfSession = [NSArray arrayWithArray:temp];
     
     // Init PHSessionView
-    int sessionHeight = self.view.frame.size.height - kHeaderTitleHeight;
+    int sessionHeight = self.view.frame.size.height - _appearanceLayout.heightAirMenuSection;
     for (int i = 0; i < session; i ++) {
         PHSessionView * sessionView = sessionViews[@(i)];
         if (!sessionView) {
-            sessionView = [[PHSessionView alloc] initWithFrame:CGRectMake(30, 0, kSessionWidth, sessionHeight)];
-            [sessionView.titleButton setTitleColor:_sectionTitleColor forState:UIControlStateNormal];
-            sessionView.titleButton.titleLabel.font = _sectionTitleFont;
+            sessionView = [[PHSessionView alloc] initWithFrame:CGRectMake(_appearanceLayout.sessionViewLeftPadding, 0, kSessionWidth, sessionHeight)];
+            [sessionView.titleButton setTitleColor:_appearanceLayout.sectionTitleColor forState:UIControlStateNormal];
+            sessionView.titleButton.titleLabel.font = _appearanceLayout.sectionTitleFont;
             sessionView.titleButton.tag = i;
             [sessionView.titleButton addTarget:self action:@selector(sessionButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
+            CGFloat buttonY = 0;
+            switch (_appearanceLayout.sectionContentMode) {
+                case PHAirViewAppearanceLayoutContentModeTop:
+                    buttonY = _appearanceLayout.sectionEdgeInsets.top;
+                    break;
+                case PHAirViewAppearanceLayoutContentModeCenter:
+                    buttonY = (_appearanceLayout.heightAirMenuSection - _appearanceLayout.sectionContentHeight) / 2;
+                    break;
+                case PHAirViewAppearanceLayoutContentModeBottom:
+                    buttonY = _appearanceLayout.heightAirMenuSection - _appearanceLayout.sectionContentHeight - _appearanceLayout.sectionEdgeInsets.bottom;
+                    break;
+            }
+            sessionView.titleButton.backgroundColor = [UIColor blueColor];
+            sessionView.titleButton.frame = CGRectMake(_appearanceLayout.sectionEdgeInsets.left, buttonY, kSessionWidth, _appearanceLayout.sectionContentHeight);
             [sessionViews setObject:sessionView forKey:@(i)];
+            sessionView.backgroundColor = [UIColor yellowColor];
         }
         // Set title for header session
         NSString * sesionTitle = [self.dataSource titleForHeaderAtSession:i];
@@ -618,9 +623,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         if ([self.dataSource respondsToSelector:@selector(thumbnailForHeaderAtSession:)]) {
             [sessionView.titleButton setImageForSingleState:[self.dataSource thumbnailForHeaderAtSession:i]];
             sessionView.titleButton.imageView.contentMode = UIViewContentModeCenter;
-            if ([self.delegate respondsToSelector:@selector(thumbnailAndTitlePaddingForHeaderAtSession:)]) {
-                sessionView.titleButton.titleImagePadding = [self.delegate thumbnailAndTitlePaddingForHeaderAtSession:i];
-            }
+            sessionView.titleButton.titleImagePadding = _appearanceLayout.paddingBetweenThumbnailAndTitleInSection;
         }
     }
     
@@ -632,31 +635,39 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             [view removeFromSuperview];
         }
 
-        int firstTop = (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * heightAirMenuRow)/2;
-        if (firstTop < 0) firstTop = 0;
+        CGFloat buttonY = 0;
+        switch (_appearanceLayout.rowsContentMode) {
+            case PHAirViewAppearanceLayoutContentModeCenter:
+                buttonY = MAX(0, (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * _appearanceLayout.heightAirMenuRow - ([rowsOfSession[i] intValue] - 1) * _appearanceLayout.paddingBetweenRows) / 2);
+                break;
+            case PHAirViewAppearanceLayoutContentModeBottom:
+            case PHAirViewAppearanceLayoutContentModeTop:
+                buttonY = _appearanceLayout.rowsEdgeInsets.top;
+                break;
+        }
         for (int j = 0; j < [rowsOfSession[i] intValue]; j ++) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
             NSString * title = [self.dataSource titleForRowAtIndexPath:indexPath];
             PPImageTitleButton * button = [[PPImageTitleButton alloc] initWithFrame:CGRectZero];
             [button setTitle:title forState:UIControlStateNormal];
             [button addTarget:self action:@selector(rowDidTouch:) forControlEvents:UIControlEventTouchUpInside];
-            [button setTitleColor:_titleNormalColor forState:UIControlStateNormal];
-            [button setTitleColor:_titleHighlightColor forState:UIControlStateHighlighted];
-            [button setTitleColor:_titleSelectedColor forState:UIControlStateSelected];
-            button.titleLabel.font = _rowTitleFont;
+            [button setTitleColor:_appearanceLayout.titleNormalColor forState:UIControlStateNormal];
+            [button setTitleColor:_appearanceLayout.titleHighlightColor forState:UIControlStateHighlighted];
+            [button setTitleColor:_appearanceLayout.titleSelectedColor forState:UIControlStateSelected];
+            button.titleLabel.font = _appearanceLayout.rowTitleFont;
             button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
             
             if ([self.dataSource respondsToSelector:@selector(thumbnailForRowAtIndexPath:)]) {
                 [button setImage:[self.dataSource thumbnailForRowAtIndexPath:indexPath] forState:UIControlStateNormal];
-                if ([self.delegate respondsToSelector:@selector(thumbnailAndTitlePaddingForRowAtIndexPath:)]) {
-                    button.titleImagePadding = [self.delegate thumbnailAndTitlePaddingForRowAtIndexPath:indexPath];
-                }
+                button.titleImagePadding = _appearanceLayout.paddingBetweenThumbnailAndTitleInRow;
             }
             [button sizeToFit];
-            button.frame = CGRectMake(0, firstTop + heightAirMenuRow*j, MIN(CGRectGetWidth(button.bounds), 200), heightAirMenuRow);
+            button.frame = CGRectMake(_appearanceLayout.rowsEdgeInsets.left, buttonY, MIN(CGRectGetWidth(button.bounds), 200), _appearanceLayout.heightAirMenuRow);
             button.tag = j;
             sessionView.containView.tag = i;
             [sessionView.containView addSubview:button];
+            
+            buttonY += _appearanceLayout.heightAirMenuRow + _appearanceLayout.paddingBetweenRows;
         }
     }
     
