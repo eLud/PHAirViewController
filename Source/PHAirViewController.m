@@ -759,7 +759,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         for (id object in sessionView.containView.allSubviews) {
             if ([object isKindOfClass:[UIButton class]]) {
                 UIButton * button = object;
-                button.highlighted = (button.tag == indexHighlight) ? YES : NO;
+                button.selected = (button.tag == indexHighlight) ? YES : NO;
             }
         }
     }
