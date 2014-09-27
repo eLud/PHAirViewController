@@ -156,7 +156,12 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     // Setting color
     _titleNormalColor    = [UIColor colorWithRed:0.45 green:0.45 blue:0.45 alpha:1];
     _titleHighlightColor = [UIColor blackColor];
-    
+    _titleSelectedColor = [UIColor redColor];
+    _sectionTitleColor = [UIColor colorWithRed:0.45 green:0.45 blue:0.45 alpha:1];
+
+    _sectionTitleFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
+    _rowTitleFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
+  
     // Init root view controller
     if ( self.storyboard) {
         @try {
@@ -600,8 +605,8 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         PHSessionView * sessionView = sessionViews[@(i)];
         if (!sessionView) {
             sessionView = [[PHSessionView alloc] initWithFrame:CGRectMake(30, 0, kSessionWidth, sessionHeight)];
-            [sessionView.titleButton setTitleColor:[UIColor colorWithRed:0.45 green:0.45 blue:0.45 alpha:1] forState:UIControlStateNormal];
-            sessionView.titleButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
+            [sessionView.titleButton setTitleColor:_sectionTitleColor forState:UIControlStateNormal];
+            sessionView.titleButton.titleLabel.font = _sectionTitleFont;
             sessionView.titleButton.tag = i;
             [sessionView.titleButton addTarget:self action:@selector(sessionButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
             [sessionViews setObject:sessionView forKey:@(i)];
@@ -637,8 +642,8 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             [button addTarget:self action:@selector(rowDidTouch:) forControlEvents:UIControlEventTouchUpInside];
             [button setTitleColor:_titleNormalColor forState:UIControlStateNormal];
             [button setTitleColor:_titleHighlightColor forState:UIControlStateHighlighted];
-            [button setTitleColor:_titleHighlightColor forState:UIControlStateSelected];
-            button.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16];
+            [button setTitleColor:_titleSelectedColor forState:UIControlStateSelected];
+            button.titleLabel.font = _rowTitleFont;
             button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
             
             if ([self.dataSource respondsToSelector:@selector(thumbnailForRowAtIndexPath:)]) {
