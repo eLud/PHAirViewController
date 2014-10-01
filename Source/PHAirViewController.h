@@ -45,7 +45,7 @@
 @property (nonatomic, assign) id <PHAirMenuDelegate>   delegate;
 @property (nonatomic, assign) id <PHAirMenuDataSource> dataSource;
 
-@property (nonatomic, readonly) UIViewController * fontViewController;
+@property (nonatomic, readonly) UIViewController * frontViewController;
 @property (nonatomic, strong)   NSIndexPath      * currentIndexPath;
 
 - (instancetype)initWithRootViewController:(UIViewController*)viewController atIndexPath:(NSIndexPath*)indexPath;

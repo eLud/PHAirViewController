@@ -71,7 +71,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 
 @property (nonatomic, strong) PHAirViewAppearanceLayout *appearanceLayout;
 
-// showAirView indicate whether to show PHAirViewController or show fontViewController;
+// showAirView indicate whether to show PHAirViewController or show frontViewController;
 @property (nonatomic, assign) BOOL showAirView;
 @end
 
@@ -212,13 +212,13 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     if (!controller) return;
     
     // remove from super view
-    if (self.fontViewController && self.fontViewController.view.superview) {
-        [self.fontViewController removeFromParentViewController];
-        [self.fontViewController.view removeFromSuperview];
+    if (self.frontViewController && self.frontViewController.view.superview) {
+        [self.frontViewController removeFromParentViewController];
+        [self.frontViewController.view removeFromSuperview];
     }
     
     // save information
-    _fontViewController = controller;
+    _frontViewController = controller;
     _currentIndexPath   = indexPath;
     
     if (indexPath && indexPath.row != kIndexPathOutMenu.row) {
@@ -229,15 +229,15 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     }
     
     // move to top
-//    [_fontViewController viewWillAppear:YES];
-//    [_fontViewController viewDidAppear:YES];
+//    [_frontViewController viewWillAppear:YES];
+//    [_frontViewController viewDidAppear:YES];
     
-    [self addChildViewController:_fontViewController];
-    UIView * controllerView = _fontViewController.view;
+    [self addChildViewController:_frontViewController];
+    UIView * controllerView = _frontViewController.view;
     controllerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     controllerView.frame = self.view.bounds;
     [self.view addSubview:controllerView];
-    [_fontViewController didMoveToParentViewController:self];
+    [_frontViewController didMoveToParentViewController:self];
 }
 
 #pragma mark storyboard support
@@ -285,7 +285,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (void)handleSwipeOnAirImageView:(UISwipeGestureRecognizer*)swipe
 {
     [self hideAirViewOnComplete:^{
-        [self bringViewControllerToTop:self.fontViewController
+        [self bringViewControllerToTop:self.frontViewController
                            atIndexPath:self.currentIndexPath];
     }];
 }
@@ -293,7 +293,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (void)handleTapOnAirImageView:(UITapGestureRecognizer*)swipe
 {
     [self hideAirViewOnComplete:^{
-        [self bringViewControllerToTop:self.fontViewController
+        [self bringViewControllerToTop:self.frontViewController
                            atIndexPath:self.currentIndexPath];
     }];
 }
@@ -1170,10 +1170,10 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (UIViewController *)childViewControllerForStatusBarHidden
 {
   if (!_showAirView) {
-    if ([self.fontViewController isKindOfClass:[UINavigationController class]]) {
-      return [(UINavigationController *)self.fontViewController topViewController];
+    if ([self.frontViewController isKindOfClass:[UINavigationController class]]) {
+      return [(UINavigationController *)self.frontViewController topViewController];
     }
-    return self.fontViewController;
+    return self.frontViewController;
   } else {
     // trigger prefersStatusBarHidden
     return nil;
@@ -1183,10 +1183,10 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (UIViewController *)childViewControllerForStatusBarStyle
 {
   if (!_showAirView) {
-    if ([self.fontViewController isKindOfClass:[UINavigationController class]]) {
-      return [(UINavigationController *)self.fontViewController topViewController];
+    if ([self.frontViewController isKindOfClass:[UINavigationController class]]) {
+      return [(UINavigationController *)self.frontViewController topViewController];
     }
-    return self.fontViewController;
+    return self.frontViewController;
   } else {
     // trigger prefersStatusBarStyle
     return nil;
