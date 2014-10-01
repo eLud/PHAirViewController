@@ -33,6 +33,11 @@
     l.sectionContentHeight = 50;
     l.sectionContentMode = PHAirViewAppearanceLayoutContentModeCenter;
     l.sectionEdgeInsets = UIEdgeInsetsMake(40, 0, 0, 0);
+  
+    l.statusBarStyle = UIStatusBarStyleDefault;
+    l.statusBarHidden = NO;
+    l.statusBarAnimation = UIStatusBarAnimationNone;
+  
     return l;
 }
 @end

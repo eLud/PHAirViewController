@@ -62,4 +62,8 @@
     return controller;
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+  return UIStatusBarStyleDefault;
+}
 @end

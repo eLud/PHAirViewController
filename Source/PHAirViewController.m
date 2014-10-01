@@ -70,6 +70,9 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 @property (nonatomic, strong) UIPanGestureRecognizer * panGestureRecognizer;
 
 @property (nonatomic, strong) PHAirViewAppearanceLayout *appearanceLayout;
+
+// showAirView indicate whether to show PHAirViewController or show fontViewController;
+@property (nonatomic, assign) BOOL showAirView;
 @end
 
 @implementation PHAirViewController {
@@ -788,24 +791,25 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 
 - (void)rowDidTouch:(UIButton*)button
 {
-    // Save row touch in session
-    lastIndexInSession[@(currentIndexSession)] = @(button.tag);
-    
-    self.currentIndexPath = [NSIndexPath indexPathForRow:button.tag
-                                               inSection:button.superview.tag];
-  
+    NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:button.tag inSection:button.superview.tag];
     // Should select ?
     if (self.delegate && [self.delegate respondsToSelector:@selector(shouldSelectRowAtIndex:)]) {
-        if (![self.delegate shouldSelectRowAtIndex:self.currentIndexPath]) {
+        if (![self.delegate shouldSelectRowAtIndex:selectedIndexPath]) {
             return;
         }
     }
-    
+  
+    // Save row touch in session
+    lastIndexInSession[@(currentIndexSession)] = @(button.tag);
+    self.currentIndexPath = selectedIndexPath;
+    _showAirView = NO;
+  
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectRowAtIndex:)]) {
         [self.delegate didSelectRowAtIndex:self.currentIndexPath];
     }
   
     [self updateButtonColor];
+    [self setNeedsStatusBarAppearanceUpdate];
 
     // Get thumbnailImage
     UIImage * nextThumbnail = [self getThumbnailImageAtIndexPath:self.currentIndexPath];
@@ -815,6 +819,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     
     [self hideAirViewOnComplete:^{
         UIViewController * controller = [self getViewControllerAtIndexPath:self.currentIndexPath];
+      [self setNeedsStatusBarAppearanceUpdate];
         if (controller) {
             [self bringViewControllerToTop:controller atIndexPath:self.currentIndexPath];
         } else if (self.storyboard) {
@@ -893,9 +898,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (void)showAirViewFromViewController:(UIViewController*)controller
                              complete:(void (^)(void))complete
 {
-    // update color
-    [self updateButtonColor];
-    
     if (self.delegate && [self.delegate respondsToSelector:@selector(willShowAirViewController)]) {
         [self.delegate willShowAirViewController];
     }
@@ -934,7 +936,12 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     
     self.rightView.alpha = 1;
     self.leftView.alpha  = 0;
-    
+    _showAirView = YES;
+
+    // update UI
+    [self updateButtonColor];
+    [self setNeedsStatusBarAppearanceUpdate];
+
     [UIView animateWithDuration:kDuration
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
@@ -1144,6 +1151,47 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     rowsOfSession = nil;
 }
 
+#pragma mark - StatusBar
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+  return _appearanceLayout.statusBarStyle;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+  return _appearanceLayout.statusBarHidden;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+  return _appearanceLayout.statusBarAnimation;
+}
+
+- (UIViewController *)childViewControllerForStatusBarHidden
+{
+  if (!_showAirView) {
+    if ([self.fontViewController isKindOfClass:[UINavigationController class]]) {
+      return [(UINavigationController *)self.fontViewController topViewController];
+    }
+    return self.fontViewController;
+  } else {
+    // trigger prefersStatusBarHidden
+    return nil;
+  }
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle
+{
+  if (!_showAirView) {
+    if ([self.fontViewController isKindOfClass:[UINavigationController class]]) {
+      return [(UINavigationController *)self.fontViewController topViewController];
+    }
+    return self.fontViewController;
+  } else {
+    // trigger prefersStatusBarStyle
+    return nil;
+  }
+}
 @end
 
 

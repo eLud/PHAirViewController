@@ -43,5 +43,9 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) UIEdgeInsets sectionEdgeInsets;
 @property (nonatomic, assign) CGFloat sectionContentHeight;
 
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
+@property (nonatomic, assign) BOOL statusBarHidden;
+@property (nonatomic, assign) UIStatusBarAnimation statusBarAnimation;
+
 + (instancetype)defaultAppearanceLayout;
 @end
