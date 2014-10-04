@@ -802,14 +802,12 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     // Save row touch in session
     lastIndexInSession[@(currentIndexSession)] = @(button.tag);
     self.currentIndexPath = selectedIndexPath;
-    _showAirView = NO;
   
     if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectRowAtIndex:)]) {
         [self.delegate didSelectRowAtIndex:self.currentIndexPath];
     }
   
     [self updateButtonColor];
-    [self setNeedsStatusBarAppearanceUpdate];
 
     // Get thumbnailImage
     UIImage * nextThumbnail = [self getThumbnailImageAtIndexPath:self.currentIndexPath];
@@ -819,7 +817,6 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     
     [self hideAirViewOnComplete:^{
         UIViewController * controller = [self getViewControllerAtIndexPath:self.currentIndexPath];
-      [self setNeedsStatusBarAppearanceUpdate];
         if (controller) {
             [self bringViewControllerToTop:controller atIndexPath:self.currentIndexPath];
         } else if (self.storyboard) {
@@ -940,13 +937,14 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 
     // update UI
     [self updateButtonColor];
-    [self setNeedsStatusBarAppearanceUpdate];
 
     [UIView animateWithDuration:kDuration
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^
      {
+        [self setNeedsStatusBarAppearanceUpdate];
+
          self.leftView.alpha = 1;
          
          CATransform3D airImageRotate = self.airImageView.layer.transform;
@@ -982,15 +980,18 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 
 - (void)hideAirViewOnComplete:(void (^)(void))complete
 {
+    _showAirView = NO;
     if (self.delegate && [self.delegate respondsToSelector:@selector(willHideAirViewController)]) {
         [self.delegate willHideAirViewController];
     }
-    
+  
     [UIView animateWithDuration:kDuration
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^
      {
+        [self setNeedsStatusBarAppearanceUpdate];
+
          self.leftView.alpha = 0;
          
          CATransform3D airImageRotate = self.airImageView.layer.transform;
