@@ -21,7 +21,7 @@
 
 - (NSInteger)numberOfSession
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)numberOfRowsInSession:(NSInteger)sesion

@@ -64,6 +64,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 @property (nonatomic, strong) UIView      * leftView;   // LeftView Contains SessionView
 @property (nonatomic, strong) UIView      * rightView;  // RightView Contains self.airImageView
 @property (nonatomic, strong) UIImageView * airImageView;
+@property (nonatomic, strong) UIScrollView *leftViewWrapper;
 
 @property (nonatomic)         float         lastDeegreesRotateTransform;
 
@@ -162,9 +163,11 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     [self.wrapperView addSubview:self.contentView];
     
     // Init left/rightView
-    [self.contentView addSubview:self.leftView];
+    [self.leftViewWrapper addSubview:self.leftView];
+    [self.contentView addSubview:self.leftViewWrapper];
     [self.contentView addSubview:self.rightView];
-    
+  
+  
     // Init debugging coloring
     self.leftView.backgroundColor = _appearanceLayout.leftViewDebuggingColor;
     self.rightView.backgroundColor = _appearanceLayout.rightViewDebuggingColor;
@@ -582,7 +585,11 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     
     // Get number session
     session = [self.dataSource numberOfSession];
-    
+  
+    // leftViewWrapper
+    self.leftViewWrapper.scrollEnabled = session == 1 && _appearanceLayout.enableLeftViewBouncinessWithOnlyOneSession;
+    self.scrollLeftViewPanGestureRecognizer.enabled = session > 1;
+
     // Init
     NSMutableArray * tempThumbnails = [NSMutableArray array];
     NSMutableArray * tempViewControllers = [NSMutableArray array];
@@ -886,6 +893,15 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         _leftView.userInteractionEnabled = YES;
     }
     return _leftView;
+}
+
+- (UIScrollView *)leftViewWrapper
+{
+  if (!_leftViewWrapper) {
+    _leftViewWrapper = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, kSessionWidth, CGRectGetHeight(self.view.bounds))];
+    _leftViewWrapper.alwaysBounceVertical = YES;
+  }
+  return _leftViewWrapper;
 }
 
 - (UIView*)rightView

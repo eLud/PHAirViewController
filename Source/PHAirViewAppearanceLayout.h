@@ -50,6 +50,8 @@ typedef enum : NSUInteger {
 // by default it is the screen size
 @property (nonatomic, assign) CGFloat interactiveGestureBaseValueInPixel;
 
+@property (nonatomic, assign) BOOL enableLeftViewBouncinessWithOnlyOneSession;
+
 // Debugging session
 @property (nonatomic, strong) UIColor *leftViewDebuggingColor;
 @property (nonatomic, strong) UIColor *rightViewDebuggingColor;

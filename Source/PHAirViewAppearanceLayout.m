@@ -39,6 +39,7 @@
     l.statusBarAnimation = UIStatusBarAnimationNone;
   
     l.interactiveGestureBaseValueInPixel = CGRectGetWidth([UIScreen mainScreen].bounds);
+    l.enableLeftViewBouncinessWithOnlyOneSession = YES;
     return l;
 }
 
