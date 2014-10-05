@@ -47,5 +47,13 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) BOOL statusBarHidden;
 @property (nonatomic, assign) UIStatusBarAnimation statusBarAnimation;
 
+// by default it is the screen size
+@property (nonatomic, assign) CGFloat interactiveGestureBaseValueInPixel;
+
+// Debugging session
+@property (nonatomic, strong) UIColor *leftViewDebuggingColor;
+@property (nonatomic, strong) UIColor *rightViewDebuggingColor;
 + (instancetype)defaultAppearanceLayout;
+
++ (instancetype)debuggingAppearanceLayout;
 @end

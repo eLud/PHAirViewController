@@ -38,6 +38,16 @@
     l.statusBarHidden = NO;
     l.statusBarAnimation = UIStatusBarAnimationNone;
   
+    l.interactiveGestureBaseValueInPixel = CGRectGetWidth([UIScreen mainScreen].bounds);
+    return l;
+}
+
++ (instancetype)debuggingAppearanceLayout
+{
+    PHAirViewAppearanceLayout *l = [[self class] defaultAppearanceLayout];
+    l.leftViewDebuggingColor = [UIColor brownColor];
+    l.rightViewDebuggingColor = [UIColor redColor];
+    l.interactiveGestureBaseValueInPixel = 220;
     return l;
 }
 @end
