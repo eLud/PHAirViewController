@@ -900,6 +900,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
   if (!_leftViewWrapper) {
     _leftViewWrapper = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, kSessionWidth, CGRectGetHeight(self.view.bounds))];
     _leftViewWrapper.alwaysBounceVertical = YES;
+    _leftViewWrapper.scrollsToTop = NO; // disable tapping status that allow it to scrollToTop
   }
   return _leftViewWrapper;
 }
