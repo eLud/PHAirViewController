@@ -914,7 +914,12 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     return _rightView;
 }
 
-
+- (void)_resetLeftViewFrame
+{
+  // BUG: There is a bug in the translation of the leftView.layer.transform. Too hard to fix. Thus need to reset it its frame
+  _leftView.layer.transform = CATransform3DIdentity;
+  _leftView.frame = CGRectMake(0, -(self.view.height - _appearanceLayout.heightAirMenuSection), kSessionWidth, (self.view.height - _appearanceLayout.heightAirMenuSection)*3);
+}
 #pragma mark - Show/Hide air view controller
 
 - (void)showAirViewFromViewController:(UIViewController*)controller
@@ -946,7 +951,8 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         [controller removeFromParentViewController];
         [controller.view removeFromSuperview];
     }
-    
+  
+    [self _resetLeftViewFrame];
     [self _openAirViewInPercent:0.0];
     
     self.rightView.alpha = 1;
