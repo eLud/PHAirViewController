@@ -1280,9 +1280,35 @@ static char const * const SwipeObject    = "SWIPE_OBJECT";
     return (id)parent;
 }
 
-- (void)dealloc
+/// Fix the bug based on comment here: https://github.com/taphuochai/PHAirViewController/issues/13
+/// This is so that phSwipeGestureRecognizer doesn't create a swipe gesture in *every* vc's dealloc.
+- (BOOL)phSwipeGestureRecognizerExists {
+    return objc_getAssociatedObject(self, SwipeObject) != nil;
+}
+
+- (void)ph_dealloc
 {
-    self.phSwipeHander = nil;
+    if (self.phSwipeGestureRecognizerExists) {
+        self.phSwipeHander = nil;
+    }
+    [self ph_dealloc]; // This calls the original dealloc.
+}
+
+/// Swizzle the method into place.
+void PH_MethodSwizzle(Class c, SEL origSEL, SEL overrideSEL) {
+    Method origMethod = class_getInstanceMethod(c, origSEL);
+    Method overrideMethod = class_getInstanceMethod(c, overrideSEL);
+    if (class_addMethod(c, origSEL, method_getImplementation(overrideMethod), method_getTypeEncoding(overrideMethod))) {
+        class_replaceMethod(c, overrideSEL, method_getImplementation(origMethod), method_getTypeEncoding(origMethod));
+    } else {
+        method_exchangeImplementations(origMethod, overrideMethod);
+    }
+}
+
+/// Swizzle dealloc at load time.
++ (void)load {
+    SEL deallocSelector = NSSelectorFromString(@"dealloc"); // Because ARC won't allow @selector(dealloc).
+    PH_MethodSwizzle(self, deallocSelector, @selector(ph_dealloc));
 }
 
 @end
