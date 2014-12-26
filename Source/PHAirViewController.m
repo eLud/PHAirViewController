@@ -668,20 +668,10 @@ void PHShowViewBorder(UIView *view)
             [view removeFromSuperview];
         }
 
-
         CGFloat buttonY = 0;
-        switch (_appearanceLayout.rowsContentMode) {
-            case PHAirViewAppearanceLayoutContentModeCenter:
-                buttonY = MAX(0, (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * _appearanceLayout.rowHeight - ([rowsOfSession[i] intValue] - 1) * _appearanceLayout.paddingBetweenRows) / 2);
-                break;
-            case PHAirViewAppearanceLayoutContentModeBottom:
-                NSAssert(NO, @"Dose not support");
-                break;
-            case PHAirViewAppearanceLayoutContentModeTop:
-                buttonY = _appearanceLayout.rowsEdgeInsets.top;
-                break;
-        }
-        for (int j = 0; j < [rowsOfSession[i] intValue]; j ++) {
+        NSUInteger numberOfRow = [rowsOfSession[i] integerValue];
+        for (NSUInteger j = 0; j < numberOfRow; j ++) {
+
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
             NSString * title = [self.dataSource titleForRowAtIndexPath:indexPath];
             PPImageTitleButton * button = [[PPImageTitleButton alloc] initWithFrame:CGRectZero];
@@ -697,27 +687,39 @@ void PHShowViewBorder(UIView *view)
                 [button setImage:[self.dataSource thumbnailForRowAtIndexPath:indexPath] forState:UIControlStateNormal];
                 button.titleImagePadding = _appearanceLayout.paddingBetweenThumbnailAndTitleInRow;
             }
-            [button sizeToFit];
-            button.frame = CGRectMake(_appearanceLayout.rowsEdgeInsets.left, buttonY, MIN(CGRectGetWidth(button.bounds), 200), _appearanceLayout.rowHeight);
+
+            CGSize buttonSize = [button sizeThatFits:CGSizeZero];
+
+            buttonY = (_appearanceLayout.rowHeight + _appearanceLayout.paddingBetweenRows) * j;
+            switch (_appearanceLayout.rowsContentMode) {
+              case PHAirViewAppearanceLayoutContentModeCenter:
+                buttonY += (_appearanceLayout.rowHeight - buttonSize.height) / 2.0;
+                break;
+              case PHAirViewAppearanceLayoutContentModeBottom:
+                NSAssert(NO, @"Dose not support");
+                break;
+              case PHAirViewAppearanceLayoutContentModeTop:
+                buttonY += _appearanceLayout.rowsEdgeInsets.top;
+                break;
+            }
+
+            button.frame = CGRectMake(_appearanceLayout.rowsEdgeInsets.left, buttonY, buttonSize.width, buttonSize.height);
             button.tag = j;
             sessionView.containView.tag = i;
             [sessionView.containView addSubview:button];
-            
-            buttonY += _appearanceLayout.rowHeight + _appearanceLayout.paddingBetweenRows;
         }
 
         // resize the container view.
-        CGRect containerBounds = sessionView.containView.bounds;
-        containerBounds.size.height = buttonY;
-        sessionView.containView.bounds = containerBounds;
+        CGRect containerFrame = sessionView.containView.frame;
+        containerFrame.size.height = (_appearanceLayout.rowHeight + _appearanceLayout.paddingBetweenRows) * numberOfRow;
+        sessionView.containView.frame = containerFrame;
 
         // resize the sessionView
         CGRect sessionBounds = sessionView.bounds;
-        sessionBounds.size.height = MIN(CGRectGetHeight(containerBounds) + _appearanceLayout.sectionHeaderHeight, CGRectGetHeight(self.view.bounds));
+        sessionBounds.size.height = MIN(CGRectGetHeight(containerFrame) + _appearanceLayout.sectionHeaderHeight, CGRectGetHeight(self.view.bounds));
         sessionView.bounds = sessionBounds;
     }
 
-    // F
     _sessionMaxHeight = 0;
     [sessionViews.allValues enumerateObjectsUsingBlock:^(PHSessionView *sessionView, NSUInteger index, BOOL *stop) {
       if (CGRectGetHeight(sessionView.bounds) > _sessionMaxHeight) {

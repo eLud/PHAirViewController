@@ -21,12 +21,12 @@
 
 - (NSInteger)numberOfSession
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)numberOfRowsInSession:(NSInteger)sesion
 {
-    return 8;
+    return 5;
 }
 
 - (NSString*)titleForRowAtIndexPath:(NSIndexPath*)indexPath
