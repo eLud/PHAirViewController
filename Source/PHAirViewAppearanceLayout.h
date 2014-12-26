@@ -17,32 +17,43 @@ typedef enum : NSUInteger {
 
 @interface PHAirViewAppearanceLayout : NSObject
 
-// Appearance
-@property (nonatomic, strong) UIColor * titleNormalColor;
-@property (nonatomic, strong) UIColor * titleHighlightColor;
-@property (nonatomic, strong) UIColor * titleSelectedColor;
-
-@property (nonatomic, strong) UIColor * sectionTitleColor;
-
-@property (nonatomic, strong) UIFont *sectionTitleFont;
+// Configure row title.
+@property (nonatomic, strong) UIColor *rowTitleNormalColor;
+@property (nonatomic, strong) UIColor *rowTitleHighlightColor;
+@property (nonatomic, strong) UIColor *rowTitleSelectedColor;
 @property (nonatomic, strong) UIFont *rowTitleFont;
 
-// Layout
-@property (nonatomic, assign) CGFloat heightAirMenuRow;
-@property (nonatomic, assign) CGFloat heightAirMenuSection;
+// Configure section title
+@property (nonatomic, strong) UIColor * sectionTitleColor;
+@property (nonatomic, strong) UIFont *sectionTitleFont;
 
+// Configure section header layout.
+// The relative position of headerContent inside the allocated space.
+@property (nonatomic, assign) PHAirViewAppearanceLayoutContentMode sectionHeaderContentMode; /** Allow all values*/
+// the padding for headerContent.
+@property (nonatomic, assign) UIEdgeInsets sectionHeaderEdgeInsets;
+// the actual size of sectionHeaderContent height
+@property (nonatomic, assign) CGFloat sectionHeaderContentHeight;
+// the total spacing for sectionHeaderContent
+@property (nonatomic, assign) CGFloat sectionHeaderHeight;
+// Padding between thumbnail and title in section header content.
 @property (nonatomic, assign) CGFloat paddingBetweenThumbnailAndTitleInSection;
-@property (nonatomic, assign) CGFloat paddingBetweenThumbnailAndTitleInRow;
 
-@property (nonatomic, assign) CGFloat sessionViewLeftPadding;
+// Configure row layout
+// The height of each row
+@property (nonatomic, assign) CGFloat rowHeight;
+// The relative position of rowContent inside the allocated space.
 @property (nonatomic, assign) PHAirViewAppearanceLayoutContentMode rowsContentMode; /** Only allow Top and Center */
 @property (nonatomic, assign) UIEdgeInsets rowsEdgeInsets; // only left would use; top would apply if rowsContentMode set to Top
+// Padding between thumbnail and title in row content.
+@property (nonatomic, assign) CGFloat paddingBetweenThumbnailAndTitleInRow;
+// The space between each row.
 @property (nonatomic, assign) CGFloat paddingBetweenRows;
 
-@property (nonatomic, assign) PHAirViewAppearanceLayoutContentMode sectionContentMode; /** Allow all values*/
-@property (nonatomic, assign) UIEdgeInsets sectionEdgeInsets;
-@property (nonatomic, assign) CGFloat sectionContentHeight;
+// SessionView Left edge
+@property (nonatomic, assign) CGFloat sessionViewLeftPadding;
 
+// Configure status bar
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 @property (nonatomic, assign) BOOL statusBarHidden;
 @property (nonatomic, assign) UIStatusBarAnimation statusBarAnimation;
@@ -52,9 +63,11 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, assign) BOOL enableLeftViewBouncinessWithOnlyOneSession;
 
-// Debugging session
+// View Debugging. Should disable Release mode.
 @property (nonatomic, strong) UIColor *leftViewDebuggingColor;
 @property (nonatomic, strong) UIColor *rightViewDebuggingColor;
+@property (nonatomic, assign) BOOL showSessionBorder;
+
 + (instancetype)defaultAppearanceLayout;
 
 + (instancetype)debuggingAppearanceLayout;

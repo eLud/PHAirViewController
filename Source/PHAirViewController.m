@@ -57,6 +57,12 @@ CGFloat AirRadiansToDegrees(CGFloat radians) {return radians * 180/M_PI;};
 
 static NSString * const PHSegueRootIdentifier  = @"phair_root";
 
+void PHShowViewBorder(UIView *view)
+{
+    view.layer.borderColor = [UIColor blueColor].CGColor;
+    view.layer.borderWidth = 1.0;
+}
+
 @interface PHAirViewController()
 
 @property (nonatomic, strong) UIView      * wrapperView;
@@ -115,6 +121,8 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
      ]
      */
     NSArray * viewControllers;
+
+    CGFloat _sessionMaxHeight;
 }
 
 @synthesize contentView = _contentView, airImageView = _airImageView;
@@ -385,17 +393,17 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 - (void)handleRevealGestureStateChangedWithRecognizer:(UIPanGestureRecognizer *)recognizer
 {
     CGFloat translation = [recognizer translationInView:self.leftView].y;
-    self.leftView.top = -(self.view.height - _appearanceLayout.heightAirMenuSection) + translation;
+    self.leftView.top = -_sessionMaxHeight + translation;
     
     // Vị trí y của contentView khi ở chế độ bình thường
-    int firstTop = - (self.view.height - _appearanceLayout.heightAirMenuSection);
+    int firstTop = - _sessionMaxHeight;
     // Vị trí y hiện tại của contentView khi scroll
     int afterTop = self.leftView.top;
     
     // Điểm center bình thường của contentView : self.view.height/2
     // Khi scroll lên và scroll xuống thì độ chênh lệch của contentView là self.view.height/2
     
-    int sessionViewHeight = self.view.height - _appearanceLayout.heightAirMenuSection;
+    int sessionViewHeight = _sessionMaxHeight;
     int distanceScroll = 0;
     // Nếu là kéo xuống
     if (afterTop - firstTop > 0) {
@@ -441,7 +449,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     }
     
     // Vị trí y của contentView khi ở chế độ bình thường
-    int firstTop = - (self.view.height - _appearanceLayout.heightAirMenuSection);
+    int firstTop = - (self.view.height - _appearanceLayout.sectionHeaderHeight);
     // Vị trí y hiện tại của contentView khi scroll
     int afterTop = self.leftView.top;
     
@@ -501,7 +509,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     {
         self.leftView.top = -(self.leftView.height/3)*2;
     } completion:^(BOOL finished) {
-        [self layoutContaintView];
+        [self layoutSessionViewInsideLeftView];
     }];
     [self rotateAirImage];
 }
@@ -529,7 +537,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
      {
          self.leftView.top = 0;
      } completion:^(BOOL finished) {
-         [self layoutContaintView];
+         [self layoutSessionViewInsideLeftView];
      }];
     [self rotateAirImage];
 }
@@ -609,30 +617,37 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     rowsOfSession = [NSArray arrayWithArray:temp];
     
     // Init PHSessionView
-    int sessionHeight = self.view.frame.size.height - _appearanceLayout.heightAirMenuSection;
     for (int i = 0; i < session; i ++) {
         PHSessionView * sessionView = sessionViews[@(i)];
         if (!sessionView) {
-            sessionView = [[PHSessionView alloc] initWithFrame:CGRectMake(_appearanceLayout.sessionViewLeftPadding, 0, kSessionWidth, sessionHeight)];
+            sessionView = [[PHSessionView alloc] initWithFrame:CGRectMake(_appearanceLayout.sessionViewLeftPadding, 0, kSessionWidth, CGRectGetHeight(self.view.bounds))];
             [sessionView.titleButton setTitleColor:_appearanceLayout.sectionTitleColor forState:UIControlStateNormal];
             sessionView.titleButton.titleLabel.font = _appearanceLayout.sectionTitleFont;
             sessionView.titleButton.tag = i;
             [sessionView.titleButton addTarget:self action:@selector(sessionButtonTouch:) forControlEvents:UIControlEventTouchUpInside];
             CGFloat buttonY = 0;
-            switch (_appearanceLayout.sectionContentMode) {
+            switch (_appearanceLayout.sectionHeaderContentMode) {
                 case PHAirViewAppearanceLayoutContentModeTop:
-                    buttonY = _appearanceLayout.sectionEdgeInsets.top;
+                    buttonY = _appearanceLayout.sectionHeaderEdgeInsets.top;
                     break;
                 case PHAirViewAppearanceLayoutContentModeCenter:
-                    buttonY = (_appearanceLayout.heightAirMenuSection - _appearanceLayout.sectionContentHeight) / 2;
+                    buttonY = (_appearanceLayout.sectionHeaderHeight - _appearanceLayout.sectionHeaderContentHeight) / 2;
                     break;
                 case PHAirViewAppearanceLayoutContentModeBottom:
-                    buttonY = _appearanceLayout.heightAirMenuSection - _appearanceLayout.sectionContentHeight - _appearanceLayout.sectionEdgeInsets.bottom;
+                    buttonY = _appearanceLayout.sectionHeaderHeight - _appearanceLayout.sectionHeaderContentHeight - _appearanceLayout.sectionHeaderEdgeInsets.bottom;
                     break;
             }
             sessionView.titleButton.constrainImage = YES;
-            sessionView.titleButton.frame = CGRectMake(_appearanceLayout.sectionEdgeInsets.left, buttonY, kSessionWidth, _appearanceLayout.sectionContentHeight);
+            sessionView.titleButton.frame = CGRectMake(_appearanceLayout.sectionHeaderEdgeInsets.left,
+                buttonY,
+                CGRectGetWidth(sessionView.bounds) - _appearanceLayout.sectionHeaderEdgeInsets.left - _appearanceLayout.sectionHeaderEdgeInsets.right,
+                _appearanceLayout.sectionHeaderContentHeight);
             [sessionViews setObject:sessionView forKey:@(i)];
+
+            // View Debugging
+            if (_appearanceLayout.showSessionBorder) {
+              PHShowViewBorder(sessionView);
+            }
         }
         // Set title for header session
         NSString * sesionTitle = [self.dataSource titleForHeaderAtSession:i];
@@ -647,7 +662,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
     // Init menu item for session
     for (int i = 0; i < session; i ++) {
         PHSessionView * sessionView = sessionViews[@(i)];
-        sessionView.containView.frame = CGRectMake(0, _appearanceLayout.heightAirMenuSection, kSessionWidth, sessionHeight - _appearanceLayout.heightAirMenuSection);
+        sessionView.containView.frame = CGRectMake(0, _appearanceLayout.sectionHeaderHeight, kSessionWidth, CGRectGetHeight(self.view.bounds) - _appearanceLayout.sectionHeaderHeight);
         // Remove all sub-view for contain of PHSessionView
         for (UIView * view in sessionView.containView.subviews) {
             [view removeFromSuperview];
@@ -657,9 +672,11 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         CGFloat buttonY = 0;
         switch (_appearanceLayout.rowsContentMode) {
             case PHAirViewAppearanceLayoutContentModeCenter:
-                buttonY = MAX(0, (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * _appearanceLayout.heightAirMenuRow - ([rowsOfSession[i] intValue] - 1) * _appearanceLayout.paddingBetweenRows) / 2);
+                buttonY = MAX(0, (sessionView.containView.frame.size.height - [rowsOfSession[i] intValue] * _appearanceLayout.rowHeight - ([rowsOfSession[i] intValue] - 1) * _appearanceLayout.paddingBetweenRows) / 2);
                 break;
             case PHAirViewAppearanceLayoutContentModeBottom:
+                NSAssert(NO, @"Dose not support");
+                break;
             case PHAirViewAppearanceLayoutContentModeTop:
                 buttonY = _appearanceLayout.rowsEdgeInsets.top;
                 break;
@@ -670,9 +687,9 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
             PPImageTitleButton * button = [[PPImageTitleButton alloc] initWithFrame:CGRectZero];
             [button setTitle:title forState:UIControlStateNormal];
             [button addTarget:self action:@selector(rowDidTouch:) forControlEvents:UIControlEventTouchUpInside];
-            [button setTitleColor:_appearanceLayout.titleNormalColor forState:UIControlStateNormal];
-            [button setTitleColor:_appearanceLayout.titleHighlightColor forState:UIControlStateHighlighted];
-            [button setTitleColor:_appearanceLayout.titleSelectedColor forState:UIControlStateSelected];
+            [button setTitleColor:_appearanceLayout.rowTitleNormalColor forState:UIControlStateNormal];
+            [button setTitleColor:_appearanceLayout.rowTitleHighlightColor forState:UIControlStateHighlighted];
+            [button setTitleColor:_appearanceLayout.rowTitleSelectedColor forState:UIControlStateSelected];
             button.titleLabel.font = _appearanceLayout.rowTitleFont;
             button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
             button.constrainImage = YES;
@@ -681,20 +698,44 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
                 button.titleImagePadding = _appearanceLayout.paddingBetweenThumbnailAndTitleInRow;
             }
             [button sizeToFit];
-            button.frame = CGRectMake(_appearanceLayout.rowsEdgeInsets.left, buttonY, MIN(CGRectGetWidth(button.bounds), 200), _appearanceLayout.heightAirMenuRow);
+            button.frame = CGRectMake(_appearanceLayout.rowsEdgeInsets.left, buttonY, MIN(CGRectGetWidth(button.bounds), 200), _appearanceLayout.rowHeight);
             button.tag = j;
             sessionView.containView.tag = i;
             [sessionView.containView addSubview:button];
             
-            buttonY += _appearanceLayout.heightAirMenuRow + _appearanceLayout.paddingBetweenRows;
+            buttonY += _appearanceLayout.rowHeight + _appearanceLayout.paddingBetweenRows;
         }
+
+        // resize the container view.
+        CGRect containerBounds = sessionView.containView.bounds;
+        containerBounds.size.height = buttonY;
+        sessionView.containView.bounds = containerBounds;
+
+        // resize the sessionView
+        CGRect sessionBounds = sessionView.bounds;
+        sessionBounds.size.height = MIN(CGRectGetHeight(containerBounds) + _appearanceLayout.sectionHeaderHeight, CGRectGetHeight(self.view.bounds));
+        sessionView.bounds = sessionBounds;
     }
-    
+
+    // F
+    _sessionMaxHeight = 0;
+    [sessionViews.allValues enumerateObjectsUsingBlock:^(PHSessionView *sessionView, NSUInteger index, BOOL *stop) {
+      if (CGRectGetHeight(sessionView.bounds) > _sessionMaxHeight) {
+        _sessionMaxHeight = CGRectGetHeight(sessionView.bounds);
+      }
+    }];
+
+    CGRect frame = self.leftView.frame;
+    frame.origin.y = - _sessionMaxHeight;
+    frame.size.height = _sessionMaxHeight * 3;
+    self.leftView.frame = frame;
+
+    // resize leftView
     // layout content view
-    [self layoutContaintView];
+    [self layoutSessionViewInsideLeftView];
 }
 
-- (void)layoutContaintView
+- (void)layoutSessionViewInsideLeftView
 {
     if (sessionViews.count == 1) {
         middleSession = sessionViews[@(0)];
@@ -703,7 +744,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
         
         middleSession.top = middleSession.height;
         [self.leftView addSubview:middleSession];
-        self.leftView.top = - (self.leftView.height)/3;        
+        self.leftView.top = - (self.leftView.height)/3;
         
         // Update color
         [self updateButtonColor];
@@ -889,7 +930,7 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 {
     if (!_leftView) {
         // leftView content sessionView
-        _leftView = [[UIView alloc] initWithFrame:CGRectMake(0, -(self.view.height - _appearanceLayout.heightAirMenuSection), kSessionWidth, (self.view.height - _appearanceLayout.heightAirMenuSection)*3)];
+        _leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kSessionWidth, self.view.height * 3)];
         _leftView.userInteractionEnabled = YES;
     }
     return _leftView;
@@ -918,8 +959,9 @@ static NSString * const PHSegueRootIdentifier  = @"phair_root";
 {
   // BUG: There is a bug in the translation of the leftView.layer.transform. Too hard to fix. Thus need to reset it its frame
   _leftView.layer.transform = CATransform3DIdentity;
-  _leftView.frame = CGRectMake(0, -(self.view.height - _appearanceLayout.heightAirMenuSection), kSessionWidth, (self.view.height - _appearanceLayout.heightAirMenuSection)*3);
+  _leftView.frame = CGRectMake(0, -_sessionMaxHeight, kSessionWidth, _sessionMaxHeight * 3.0);
 }
+
 #pragma mark - Show/Hide air view controller
 
 - (void)showAirViewFromViewController:(UIViewController*)controller
