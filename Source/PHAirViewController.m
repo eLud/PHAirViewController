@@ -96,7 +96,7 @@ void PHShowViewBorder(UIView *view)
     NSMutableDictionary    * sessionViews;    
     
     // current index sesion view
-    int        currentIndexSession;    
+    NSInteger        currentIndexSession;    
     
     // for animation
     BOOL            isAnimation;
