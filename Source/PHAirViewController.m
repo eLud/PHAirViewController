@@ -127,6 +127,17 @@ void PHShowViewBorder(UIView *view)
 
 @synthesize contentView = _contentView, airImageView = _airImageView;
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        
+        _appearanceLayout = [PHAirViewAppearanceLayout defaultAppearanceLayout];
+        
+    }
+    return self;
+}
+
 - (instancetype)initWithRootViewController:(UIViewController *)viewController atIndexPath:(NSIndexPath *)indexPath
 {
     return [self initWithRootViewController:viewController atIndexPath:indexPath appearanceLayout:[PHAirViewAppearanceLayout debuggingAppearanceLayout]];
