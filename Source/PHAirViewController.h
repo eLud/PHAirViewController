@@ -44,6 +44,7 @@
 
 @property (nonatomic, assign) id <PHAirMenuDelegate>   delegate;
 @property (nonatomic, assign) id <PHAirMenuDataSource> dataSource;
+@property (nonatomic, strong) PHAirViewAppearanceLayout *appearanceLayout;
 
 @property (nonatomic, readonly) UIViewController * frontViewController;
 @property (nonatomic, strong)   NSIndexPath      * currentIndexPath;

@@ -79,8 +79,6 @@ void PHShowViewBorder(UIView *view)
 @property (nonatomic, strong) UIPanGestureRecognizer * interactAirViewPanGestureRecognizer;
 @property (nonatomic, strong) UITapGestureRecognizer * airViewTapGestureRecognizer;
 
-@property (nonatomic, strong) PHAirViewAppearanceLayout *appearanceLayout;
-
 // showAirView indicate whether to show PHAirViewController or show frontViewController;
 @property (nonatomic, assign) BOOL showAirView;
 @property (nonatomic, assign) CGFloat previousRightViewOpenInteractionInPercent;

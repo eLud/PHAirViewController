@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		335FE3121A5ADA180019AAB2 /* PHAirViewAppearanceLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 335FE3111A5ADA180019AAB2 /* PHAirViewAppearanceLayout.m */; };
 		38BC4A7A19D6431F00F1C7A3 /* PPImageTitleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 38BC4A7919D6431F00F1C7A3 /* PPImageTitleButton.m */; };
 		4882D84B18D19DBF00CA0012 /* Main-ipad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4882D84A18D19DBF00CA0012 /* Main-ipad.storyboard */; };
 		489325E918AA5D6A00B6D392 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48F2B37418AA51F400B47D4B /* Main.storyboard */; };
@@ -42,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		335FE3101A5ADA180019AAB2 /* PHAirViewAppearanceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PHAirViewAppearanceLayout.h; sourceTree = "<group>"; };
+		335FE3111A5ADA180019AAB2 /* PHAirViewAppearanceLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PHAirViewAppearanceLayout.m; sourceTree = "<group>"; };
 		38BC4A7819D6431F00F1C7A3 /* PPImageTitleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPImageTitleButton.h; sourceTree = "<group>"; };
 		38BC4A7919D6431F00F1C7A3 /* PPImageTitleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPImageTitleButton.m; sourceTree = "<group>"; };
 		4882D84A18D19DBF00CA0012 /* Main-ipad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Main-ipad.storyboard"; sourceTree = "<group>"; };
@@ -212,6 +215,8 @@
 		48F2B3A818AA52A400B47D4B /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				335FE3101A5ADA180019AAB2 /* PHAirViewAppearanceLayout.h */,
+				335FE3111A5ADA180019AAB2 /* PHAirViewAppearanceLayout.m */,
 				48F2B3A918AA52A400B47D4B /* PHAirViewController.h */,
 				48F2B3AA18AA52A400B47D4B /* PHAirViewController.m */,
 				48F2B3AD18AA52A400B47D4B /* PHSessionView.h */,
@@ -327,6 +332,7 @@
 				48F2B3AF18AA52A400B47D4B /* UIViewAdditions.m in Sources */,
 				48F2B3B118AA52A400B47D4B /* PHAirViewController.m in Sources */,
 				48F2B39E18AA527A00B47D4B /* PHMenuViewController.m in Sources */,
+				335FE3121A5ADA180019AAB2 /* PHAirViewAppearanceLayout.m in Sources */,
 				48F2B3A018AA527A00B47D4B /* PHViewController.m in Sources */,
 				48F2B36F18AA51F400B47D4B /* main.m in Sources */,
 				38BC4A7A19D6431F00F1C7A3 /* PPImageTitleButton.m in Sources */,
@@ -509,6 +515,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "PHAirViewControllerTests/PHAirViewControllerTests-Info.plist";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
